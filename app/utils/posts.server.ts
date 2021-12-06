@@ -17,7 +17,6 @@ export type PostMarkdownAttributes = {
 
 // relative to the server output not the source!
 let postsPath = path.join(__dirname, "../../../../app/", "posts");
-let rootPath = path.join(__dirname, "../../../../");
 
 function isValidPostAttributes(
   attributes: any
