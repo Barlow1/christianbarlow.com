@@ -5,7 +5,6 @@ import invariant from "tiny-invariant";
 import { bundleMDX } from "mdx-bundler";
 import { remarkCodeBlocksShiki } from "@kentcdodds/md-temp";
 
-
 export type Post = {
   slug: string;
   title: string;
