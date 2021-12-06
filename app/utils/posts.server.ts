@@ -85,5 +85,6 @@ export async function getPost(slug: string) {
     },
   });
   invariant(frontmatter.title, "title is missing in mdx file");
-  return { slug, title: frontmatter.title, code, frontmatter };
+  invariant(frontmatter.date, "date is missing in mdx file");
+  return { slug, title: frontmatter.title, code, frontmatter, date: frontmatter.date };
 }

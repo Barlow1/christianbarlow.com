@@ -1,5 +1,6 @@
 ---
 title: Animation in Remix Run (SSR)
+date: 2021-12-06T22:30:51.559Z
 ---
 
 # Animation in Remix Run (SSR)
@@ -7,7 +8,7 @@ title: Animation in Remix Run (SSR)
 Welcome to my blog! I wanted a place to share new things I'm learning with the react community.
 I've already learned so much about Remix Run and SSR (Server Side Rendering) just by creating this simple blog site.
 My favorite thing about remix is definitely the speed. ⚡
-I could talk all day about remix and I'm so excited to share all of this content, but for now... Let's make a cool countdown animation component so we can launch
+I could talk all day about this framework and I'm so excited to share all of this content, but for now... Let's make a cool countdown animation component so we can launch
 this blog the right way! I am using @react-spring/web for simplifying the transform animations. 
 
 Here is the example:
@@ -22,19 +23,113 @@ Install react-spring:
 npm add @react-spring/web
 ```
 
-Save the rocket from [here](/startup.png) and paste it into your public folder. (mine is app/public in remix)
+Save the rocket from [here](/rocket.png) and paste it into your public folder. (mine is app/public in remix)
 
-Add the import to the links export in your route file 
+Add the rocket png to the links export in your route file 
 
-```tsx filename=app/root.tsx
+```tsx filename=app/posts/$slug.tsx
 export let links: LinksFunction = () => {
   return [
     {
       rel: "image",
-      href: "/startup.png",
+      href: "/rocket.png",
     },
   ];
 };
+```
+
+<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+
+Let's start by creating an array from 5 to 1 and store it in state.
+
+```tsx filename=app/components/CountDown.tsx
+const NUM_TRANS = 
+  [...Array(6).keys()].reverse().slice(0, -1);
+  const [items, setItems] = useState(NUM_TRANS);
+```
+
+Then we'll create our cascading transition using the useTransition hook.
+
+```tsx filename=app/components/CountDown.tsx
+  /**
+   * this hook is for your countdown transitions
+   *  it will fade in and translate down
+   **/
+  const transitions = useTransition(items, {
+    from: {
+        // fade
+      opacity: 0,
+      // translate
+      transform: "translate3d(0,-40px,0)",
+      display: "inline-block",
+    },
+    enter: { opacity: 1, transform: "translate3d(0,0px,0)" },
+    leave: { opacity: 0, transform: "translate3d(0,-40px,0)" },
+    trail: items.length ? 1000 : 0,
+    config: config.molasses,
+  });
+```
+
+Add your rocket ship transition. Note that we add a 5 second delay
+so the rocket ship doesn't blast off too early.
+
+```tsx filename=app/components/CountDown.tsx
+/**
+   * this hook is for your rocket transitions
+   *  it will fade in and translate up
+   **/
+  const rocketTransition = useTransition(true, {
+    from: {
+      opacity: 0,
+      transform: "translate3d(0,100px,0)",
+      display: "inline-block",
+    },
+    enter: { opacity: 1, transform: "translate3d(0,10px,0)" },
+    leave: { opacity: 0, transform: "translate3d(0,100px,0)" },
+    config: config.molasses,
+    // 5 second delay
+    delay: 5000,
+  });
+```
+
+Slap that baby in a few animated divs and return it! (Make sure to import animated from "@react-spring/web")
+
+```tsx filename=app/components/CountDown.tsx
+return (
+    <div className="flex">
+      <div className="flex">
+        {/** Countdown **/ 
+        transitions(({ opacity, transform }, item) => (
+          <animated.div
+            style={{
+              opacity: opacity,
+              transform: transform,
+            }}
+          >
+            <h1 className="px-5">{item}</h1>
+          </animated.div>
+        ))}
+      </div>
+      <div>
+        {/** Rocket **/ 
+        rocketTransition(({ opacity, transform }) => (
+          <animated.div
+            style={{
+              opacity: opacity,
+              transform: transform,
+            }}
+          >
+            <h3 className="inline">Blast off!</h3>
+            <img
+              aria-label="rocket"
+              src="/startup.png"
+              className="w-10 h-10 md:w-14 md:h-14"
+            ></img>
+          </animated.div>
+        ))}
+      </div>
+    </div>
+  );
 ```
 
 Here is the full code for the component:
@@ -122,5 +217,6 @@ function Demo() {
 export default Demo;
 ```
 
-Does this look familiar? That's because animations are friendly with remix and SSR and it's just like working on the client.
-Besides route animations, they can be done, but it doesn't feel natural yet.
+Does this look familiar? That's because animations are friendly with remix and SSR and it's just like working on the client. (Route transitions are a little tricky)
+
+Optomistic UI actually becomes easier with form transiton states from remix - a seperate post about that will follow. Thanks for reading!

@@ -28,10 +28,6 @@ export let links: LinksFunction = () => {
       href: "/android-chrome-192x192.png",
     },
     {
-      rel: "image",
-      href: "/startup.png",
-    },
-    {
       rel: "stylesheet",
       href: proseStyleUrl,
     },
