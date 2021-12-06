@@ -21,7 +21,7 @@
     "@tailwindcss/typography": "^0.4.1",
     "@types/marked": "^4.0.1",
     "clsx": "^1.1.1",
-    "esbuild": "^0.14.0",
+    "esbuild": "^0.12.9",
     "front-matter": "^4.0.2",
     "hamburger-react": "^2.4.1",
     "marked": "^4.0.5",
