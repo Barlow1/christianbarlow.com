@@ -1,45 +1,31 @@
-import type { MetaFunction, LoaderFunction } from "remix";
+import type { MetaFunction, LoaderFunction, LinksFunction } from "remix";
 import { useLoaderData, json, Link } from "remix";
+import { H2, Paragraph } from "~/components/Typography";
+import { getPosts, Post } from "~/utils/posts.server";
+import { getProjects } from "~/utils/projects";
 
 type IndexData = {
-  resources: Array<{ name: string; url: string }>;
-  demos: Array<{ name: string; to: string }>;
+  posts: Array<Post>;
+  projects: Array<{ name: string; url: string }>;
+};
+
+export let links: LinksFunction = () => {
+  return [
+    {
+      rel: "image",
+      href: "/me_at_the_plaza.png",
+    },
+  ];
 };
 
 // Loaders provide data to components and are only ever called on the server, so
 // you can connect to a database or run any server side code you want right next
 // to the component that renders it.
 // https://remix.run/api/conventions#loader
-export let loader: LoaderFunction = () => {
+export let loader: LoaderFunction = async () => {
   let data: IndexData = {
-    resources: [
-      {
-        name: "Remix Docs",
-        url: "https://remix.run/docs"
-      },
-      {
-        name: "React Router Docs",
-        url: "https://reactrouter.com/docs"
-      },
-      {
-        name: "Remix Discord",
-        url: "https://discord.gg/VBePs6d"
-      }
-    ],
-    demos: [
-      {
-        to: "demos/actions",
-        name: "Actions"
-      },
-      {
-        to: "demos/about",
-        name: "Nested Routes, CSS loading/unloading"
-      },
-      {
-        to: "demos/params",
-        name: "URL Params and Error Boundaries"
-      }
-    ]
+    posts: await getPosts(),
+    projects: getProjects(),
   };
 
   // https://remix.run/api/remix#json
@@ -49,8 +35,8 @@ export let loader: LoaderFunction = () => {
 // https://remix.run/api/conventions#meta
 export let meta: MetaFunction = () => {
   return {
-    title: "Remix Starter",
-    description: "Welcome to remix!"
+    title: "Christian Barlow",
+    description: "Welcome to my website!",
   };
 };
 
@@ -61,34 +47,31 @@ export default function Index() {
   return (
     <div className="remix__page">
       <main>
-        <h2>Welcome to Remix!</h2>
-        <p>We're stoked that you're here. 🥳</p>
-        <p>
-          Feel free to take a look around the code to see how Remix does things,
-          it might be a bit different than what you’re used to. When you're
-          ready to dive deeper, we've got plenty of resources to get you
-          up-and-running quickly.
-        </p>
-        <p>
-          Check out all the demos in this starter, and then just delete the{" "}
-          <code>app/routes/demos</code> and <code>app/styles/demos</code>{" "}
-          folders when you're ready to turn this into your next project.
-        </p>
+        <img
+          className="rounded-lg max-h-64 md:max-h-96 m-auto mb-5"
+          aria-label="Head shot of me in a t-shirt"
+          src="/me_at_the_plaza.png"
+        />
+        <H2>React, Typescript, UX and Serverless, Oh my!</H2>
+        <Paragraph>
+          Using code to fulfill my passions for fan engagement, student success, realty, and 3D
+          virtual reality experiences. 
+        </Paragraph>
       </main>
       <aside>
-        <h2>Demos In This App</h2>
-        <ul>
-          {data.demos.map(demo => (
-            <li key={demo.to} className="remix__page__resource">
-              <Link to={demo.to} prefetch="intent">
-                {demo.name}
+        <H2>Recommended Posts</H2>
+        <ul className="list-disc pl-10">
+          {data.posts.map((demo) => (
+            <li key={demo.slug} className="remix__page__resource">
+              <Link to={`posts/${demo.slug}`} prefetch="intent">
+                {demo.title}
               </Link>
             </li>
           ))}
         </ul>
-        <h2>Resources</h2>
-        <ul>
-          {data.resources.map(resource => (
+        <H2>Projects</H2>
+        <ul className="list-disc pl-10">
+          {data.projects.map((resource) => (
             <li key={resource.url} className="remix__page__resource">
               <a href={resource.url}>{resource.name}</a>
             </li>
