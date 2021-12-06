@@ -67,6 +67,10 @@ pre {
   padding-left: 0rem;
   padding-right: 0rem;
 }
+.prose pre {
+  margin-left: unset;
+  margin-right: unset;
+}
 
 .prose
   pre[data-line-numbers='true']:not([data-lang='sh'])
