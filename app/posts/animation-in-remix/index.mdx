@@ -25,6 +25,8 @@ npm add @react-spring/web
 
 Save the rocket from [here](/rocket.png) and paste it into your public folder. (mine is app/public in remix)
 
+<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+
 Add the rocket png to the links export in your route file 
 
 ```tsx filename=app/posts/$slug.tsx
@@ -38,17 +40,7 @@ export let links: LinksFunction = () => {
 };
 ```
 
-<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-
-Let's start by creating an array from 5 to 1 and store it in state.
-
-```tsx filename=app/components/CountDown.tsx
-const NUM_TRANS = 
-  [...Array(6).keys()].reverse().slice(0, -1);
-  const [items, setItems] = useState(NUM_TRANS);
-```
-
-Then we'll create our cascading transition using the useTransition hook.
+Let's start by creating our cascading transition using the useTransition hook.
 
 ```tsx filename=app/components/CountDown.tsx
   /**
@@ -140,32 +132,20 @@ import { useTransition, config } from "@react-spring/core";
 import { animated } from "@react-spring/web";
 
 function Demo() {
-  // just creating an array that counts down from 5 to 1
-  const NUM_TRANS = 
-  [...Array(6).keys()].reverse().slice(0, -1);
-  const [items, setItems] = useState(NUM_TRANS);
+  const items = [5, 4, 3, 2, 1];
 
-  /**
-   * this hook is for your countdown transitions
-   *  it will fade in and translate down
-   **/
   const transitions = useTransition(items, {
     from: {
-        // fade
       opacity: 0,
-      // translate
       transform: "translate3d(0,-40px,0)",
       display: "inline-block",
     },
     enter: { opacity: 1, transform: "translate3d(0,0px,0)" },
     leave: { opacity: 0, transform: "translate3d(0,-40px,0)" },
-    trail: items.length ? 1000 : 0,
+    trail: 1000,
     config: config.molasses,
   });
-/**
-   * this hook is for your rocket transitions
-   *  it will fade in and translate up
-   **/
+
   const rocketTransition = useTransition(true, {
     from: {
       opacity: 0,
@@ -181,8 +161,7 @@ function Demo() {
   return (
     <div className="flex">
       <div className="flex">
-        {/** Countdown **/ 
-        transitions(({ opacity, transform }, item) => (
+        {transitions(({ opacity, transform }, item) => (
           <animated.div
             style={{
               opacity: opacity,
@@ -194,8 +173,7 @@ function Demo() {
         ))}
       </div>
       <div>
-        {/** Rocket **/ 
-        rocketTransition(({ opacity, transform }) => (
+        {rocketTransition(({ opacity, transform }) => (
           <animated.div
             style={{
               opacity: opacity,
@@ -205,7 +183,7 @@ function Demo() {
             <h3 className="inline">Blast off!</h3>
             <img
               aria-label="rocket"
-              src="/startup.png"
+              src="/rocket.png"
               className="w-10 h-10 md:w-14 md:h-14"
             ></img>
           </animated.div>

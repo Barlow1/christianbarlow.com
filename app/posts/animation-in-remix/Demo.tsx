@@ -3,8 +3,7 @@ import { useTransition, config } from "@react-spring/core";
 import { animated } from "@react-spring/web";
 
 function Demo() {
-  const NUM_TRANS = [...Array(6).keys()].reverse().slice(0, -1);
-  const [items, setItems] = useState(NUM_TRANS);
+  const items = [5, 4, 3, 2, 1];
 
   const transitions = useTransition(items, {
     from: {
@@ -14,7 +13,7 @@ function Demo() {
     },
     enter: { opacity: 1, transform: "translate3d(0,0px,0)" },
     leave: { opacity: 0, transform: "translate3d(0,-40px,0)" },
-    trail: items.length ? 1000 : 0,
+    trail: 1000,
     config: config.molasses,
   });
 
