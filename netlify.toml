@@ -1,6 +1,5 @@
 [functions.server]
   included_files = ["app/posts/**"]
-  node_bundler = "esbuild"
 [build]
   functions = "netlify/functions"
   publish = "public"
