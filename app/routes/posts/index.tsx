@@ -1,4 +1,5 @@
 import { Link, useLoaderData } from "remix";
+import PostCard from "~/components/PostCard";
 import { H1 } from "~/components/Typography";
 import { getPosts, Post } from "~/utils/posts.server";
 
@@ -12,13 +13,9 @@ export default function Posts() {
       <div className="remix__page">
         <div>
           <H1>Posts</H1>
-          <ul className="list-disc pl-10">
             {posts.map((post: Post) => (
-              <li key={post.slug}>
-                <Link to={post.slug}>{post.title}</Link>
-              </li>
+              <PostCard key={post.slug} post={post} />
             ))}
-          </ul>
         </div>
       </div>
     );

@@ -1,4 +1,5 @@
 import { Link, useLoaderData } from "remix";
+import ProjectCard from "~/components/ProjectCard";
 import { H1 } from "~/components/Typography";
 import { getProjects, Project } from "~/utils/projects";
 
@@ -12,13 +13,9 @@ export default function Projects() {
     <div className="remix__page">
       <div>
         <H1>Projects</H1>
-        <ul className="list-disc pl-10">
-          {posts.map((project: Project) => (
-            <li key={project.url}>
-              <a href={project.url}>{project.name}</a>
-            </li>
-          ))}
-        </ul>
+        {posts.map((project: Project) => (
+          <ProjectCard key={project.url} project={project} />
+        ))}
       </div>
     </div>
   );

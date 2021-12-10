@@ -17,6 +17,7 @@ import ThemeProvider, { Theme } from "./components/ThemeProvider";
 import { ReactNode } from "react";
 import useTheme from "./hooks/useTheme";
 import { Navigation } from "./components/Navigation";
+import faCss from '@fortawesome/fontawesome-svg-core/styles.css'
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -30,6 +31,10 @@ export let links: LinksFunction = () => {
     {
       rel: "stylesheet",
       href: proseStyleUrl,
+    },
+    {
+      rel: "stylesheet",
+      href: faCss,
     },
   ];
 };
@@ -53,12 +58,11 @@ export function ErrorBoundary({ error }: { error: Error }) {
     <DocumentWithTheme title="Error!">
       <Layout>
         <div>
-          <h1>There was an error</h1>
-          <p>{error.message}</p>
+          <h1>There was an unexpected error</h1>
+          {process.env.NODE_ENV === 'development' && ( <p>{error.message}</p>)}
           <hr />
           <p>
-            Hey, developer, you should replace this with what you want your
-            users to see.
+            Please try again in a few minutes.
           </p>
         </div>
       </Layout>
@@ -146,7 +150,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       </div>
       <footer className="remix-app__footer">
         <div className="container remix-app__footer-content">
-          <p>&copy; ChristianBarlow.com</p>
+          <p>&copy; 2021 Christian Barlow</p>
         </div>
       </footer>
     </div>
