@@ -25,7 +25,7 @@ export function getProjects(): Project[] {
       name: "Pulsar Classifier",
       description: "Is it a star or a pulsar?",
       libraries: ["Python", "Tensorflow"],
-      repo: "https://github.com/Barlow1/Pulsar-Classifierm",
+      repo: "https://github.com/Barlow1/Pulsar-Classifier",
     },
     {
       name: "ClassScheduler",
