@@ -1,6 +1,6 @@
 [functions.server]
   node_bundler = "nft"
-  included_files = ["app/posts/**", "node_modules/@kentcdodds/md-temp/dist/base16.json", "node_modules/shiki/languages/**"]
+  included_files = ["app/routes/posts/**", "node_modules/@kentcdodds/md-temp/dist/base16.json", "node_modules/shiki/languages/**"]
   external_node_modules = ["esbuild", "vscode-oniguruma"]
 [build]
   functions = "netlify/functions"
