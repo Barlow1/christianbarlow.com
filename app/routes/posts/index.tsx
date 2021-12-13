@@ -3,7 +3,7 @@ import PostCard from "~/components/PostCard";
 import { H1 } from "~/components/Typography";
 import { getPosts, Post } from "~/utils/posts.server";
 
-export const loader = () => {
+export const loader = async () => {
     return getPosts();
 }
 

@@ -6,6 +6,7 @@ import invariant from "tiny-invariant";
 export type Post = {
   slug: string;
   title: string;
+  date: string;
 };
 
 export type PostMarkdownAttributes = {
@@ -19,7 +20,7 @@ let postsPath = path.join(__dirname, "../../../../app/routes/", "posts");
 function isValidPostAttributes(
   attributes: any
 ): attributes is PostMarkdownAttributes {
-  return attributes?.title;
+  return attributes?.title && attributes?.date;
 }
 
 export async function getPosts(): Promise<Post[]> {
@@ -41,36 +42,8 @@ export async function getPosts(): Promise<Post[]> {
         return {
           slug: filename.replace(/.md[x]*/, ""),
           title: attributes.title,
+          date: attributes.date,
         };
       })
   );
-}
-
-export async function getPost(slug: string) {
-  const postDir = await fs.readdir(postsPath);
-  // search for matching directory or file
-  const found = postDir.find(
-    (postTitle) => postTitle.search(new RegExp(`${slug}[^.$]*`)) !== -1
-  );
-  const isFile = found?.includes(".");
-  invariant(
-    found,
-    `Could not find specified file with pattern matching: ${slug}`
-  );
-  const contentDirectory = path.join(postsPath, found);
-  const mdxPath = isFile
-    ? contentDirectory
-    : path.join(contentDirectory, "index.mdx");
-  const mdxFile = await fs.readFile(mdxPath);
-  const mdxSource = mdxFile.toString().trim();
-  let { attributes } = parseFrontMatter(mdxSource);
-  invariant(isValidPostAttributes(attributes), `${slug} has bad meta data!`);
-  invariant(attributes.title, "title is missing in mdx file");
-  invariant(attributes.date, "date is missing in mdx file");
-  return {
-    slug,
-    title: attributes.title,
-    frontmatter: attributes,
-    date: attributes.date,
-  };
 }
