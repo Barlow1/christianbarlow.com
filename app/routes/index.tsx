@@ -4,7 +4,7 @@ import PostCard from "~/components/PostCard";
 import { ProjectCard } from "~/components/ProjectCard";
 import SocialBar from "~/components/SocialBar";
 import { H2, Paragraph } from "~/components/Typography";
-import { getPosts, Post } from "~/utils/posts.server";
+import { getPosts, Post } from "~/utils/posts/posts.server";
 import { getProjects, Project } from "~/utils/projects";
 
 type IndexData = {

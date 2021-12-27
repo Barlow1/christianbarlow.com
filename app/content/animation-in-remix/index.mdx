@@ -1,0 +1,245 @@
+---
+title: Countdown Animation in Remix Run (SSR)
+date: 2021-12-06T22:30:51.559Z
+---
+
+# Countdown Animation in Remix Run (SSR)
+
+Welcome to my blog! I wanted a place to share new things I'm learning with the react community.
+I've already learned so much about Remix Run and SSR (Server Side Rendering) just by creating this simple blog site.
+My favorite thing about remix is definitely the speed. ⚡
+I could talk all day about this framework and I'm so excited to share all of this content, but for now... Let's make a cool countdown animation component so we can launch
+this blog the right way! I am using react-spring for simplifying the transform animations. 
+
+Here is the example:
+
+import Demo from "./Demo.tsx";
+
+<Demo />
+
+Install react-spring:
+
+```
+npm add @react-spring/web
+```
+
+Save the rocket from [here](/rocket.png) and paste it into your public folder. (mine is app/public in remix)
+
+<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+
+Add the rocket png to the links export in your route file 
+
+```tsx filename=app/posts/$slug.tsx
+export let links: LinksFunction = () => {
+  return [
+    {
+      rel: "image",
+      href: "/rocket.png",
+    },
+  ];
+};
+```
+We need to establish some state for our countdown. "show" will add/remove our animated count down component.
+"selected" will store the state of the countdown index. "items" holds our countdown display values. Then, we'll create a
+useEffect that triggers to increment the selected index every 1 second and will hide the component when the index is greater
+than 5.
+
+``` tsx filename=app/components/CountDown.tsx
+  const [show, setShow] = useState(true);
+  const [selected, setSelected] = useState(0);
+  const items = [5, 4, 3, 2, 1, 0];
+
+
+  useEffect(() => {
+    if (selected < 5) {
+      setTimeout(() => {
+        setSelected(selected + 1);
+      }, 1000);
+    } else {
+      setShow(false);
+    }
+  }, [selected]);
+```
+
+Next, we'll need to create our countdown transition using the useTransition hook. The opacity field will cause
+the countdown to fade in & out. The transform property will translate the count 50px on enter/leave.
+
+```tsx filename=app/components/CountDown.tsx
+  /**
+   * this hook is for your countdown transitions
+   *  it will fade in and out & handle the countdown
+   **/
+  
+  const transition = useTransition(show, {
+    from: {
+      display: "inline-block",
+      opacity: 1,
+      transform: "translate3d(0,-50px,0)",
+    },
+    enter: { opacity: 1, transform: "translate3d(0,0px,0)"},
+    leave: { opacity: 0, transform: "translate3d(0,-50px,0)" },
+    color: "white",
+    config: config.molasses,
+  });
+```
+
+Add your rocket ship transition. Note that we add a 5 second delay
+so the rocket ship doesn't blast off too early.
+
+```tsx filename=app/components/CountDown.tsx
+/**
+   * this hook is for your rocket transitions
+   *  it will fade in and translate up
+   **/
+  const rocketTransition = useTransition(true, {
+    from: {
+      opacity: 0,
+      transform: "translate3d(0,100px,0)",
+      display: "inline-block",
+    },
+    enter: { opacity: 1, transform: "translate3d(0,10px,0)" },
+    leave: { opacity: 0, transform: "translate3d(0,100px,0)" },
+    config: config.molasses,
+    // 5 second delay
+    delay: 5000,
+  });
+```
+
+Slap that baby in a few animated divs and return it! (Make sure to import animated from "@react-spring/web")
+If you experience any snappy motions in react-spring, adding position: "absolute" to the animated.div is usually
+the fix.
+
+```tsx filename=app/components/CountDown.tsx
+  return (
+    <div className="flex-col">
+      {transition(
+        ({ opacity, transform }, item) =>
+          item && (
+            <animated.div
+              className="pl-5"
+              style={{
+                color: "white",
+                fontSize: "50px",
+                opacity: opacity,
+                transform: transform,
+                // this will reduce any snappy animations
+                position: "absolute",
+              }}
+              key={"countdown1"}
+            >
+              {items[selected]}
+            </animated.div>
+          )
+      )}
+      {rocketTransition(({ opacity, transform }) => (
+        <animated.div
+          style={{
+            opacity: opacity,
+            transform: transform,
+          }}
+        >
+          <h3 className="inline">Blast off!</h3>
+          <img
+            aria-label="rocket"
+            src="/rocket.png"
+            className="w-10 h-10 md:w-14 md:h-14"
+          ></img>
+        </animated.div>
+      ))}
+    </div>
+  );
+```
+
+Here is the full code for the component:
+
+```tsx filename=app/components/CountDown.tsx
+import React, { useEffect, useState } from "react";
+import { useTransition, config } from "@react-spring/core";
+import { animated } from "@react-spring/web";
+
+function Demo() {
+  const [show, setShow] = useState(true);
+  const [selected, setSelected] = useState(0);
+  const items = [5, 4, 3, 2, 1, 0];
+
+
+  useEffect(() => {
+    if (selected < 5) {
+      setTimeout(() => {
+        setSelected(selected + 1);
+      }, 1000);
+    } else {
+      setShow(false);
+    }
+  }, [selected]);
+
+
+  const transition = useTransition(show, {
+    from: {
+      display: "inline-block",
+      opacity: 1,
+      transform: "translate3d(0,-50px,0)",
+    },
+    enter: { opacity: 1, transform: "translate3d(0,0px,0)" },
+    leave: { opacity: 0, transform: "translate3d(0,-50px,0)"},
+    color: "white",
+    config: config.molasses,
+  });
+
+  const rocketTransition = useTransition(true, {
+    from: {
+      opacity: 0,
+      transform: "translate3d(0,100px,0)",
+      display: "inline-block",
+    },
+    enter: { opacity: 1, transform: "translate3d(0,10px,0)"  },
+    leave: { opacity: 0, transform: "translate3d(0,100px,0)"  },
+    config: config.molasses,
+    delay: 5000,
+  });
+
+  return (
+    <div className="flex-col">
+      {transition(
+        ({ opacity, transform }, item) =>
+          item && (
+            <animated.div
+              className="pl-5"
+              style={{
+                color: "white",
+                fontSize: "50px",
+                opacity: opacity,
+                transform: transform,
+                // this will reduce any snappy animations
+                position: "absolute",
+              }}
+              key={"countdown1"}
+            >
+              {items[selected]}
+            </animated.div>
+          )
+      )}
+      {rocketTransition(({ opacity, transform }) => (
+        <animated.div
+          style={{
+            opacity: opacity,
+            transform: transform,
+          }}
+        >
+          <h3 className="inline">Blast off!</h3>
+          <img
+            aria-label="rocket"
+            src="/rocket.png"
+            className="w-10 h-10 md:w-14 md:h-14"
+          ></img>
+        </animated.div>
+      ))}
+    </div>
+  );
+}
+export default Demo;
+```
+
+Does this look familiar? That's because animations are friendly with remix and SSR and it's just like working on the client.
+Although route transitions can be tricky, optomistic UI becomes so much easier with form transiton states from remix.
+Be sure to checkout my seperate post about that. Thanks for reading!

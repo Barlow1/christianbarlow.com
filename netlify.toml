@@ -1,7 +1,6 @@
 [functions.server]
   node_bundler = "nft"
   included_files = ["app/routes/posts/**", "node_modules/@kentcdodds/md-temp/dist/base16.json", "node_modules/shiki/languages/**"]
-  external_node_modules = ["esbuild", "vscode-oniguruma"]
 [build]
   functions = "netlify/functions"
   publish = "public"
@@ -10,6 +9,11 @@
   functions = "netlify/functions"
   publish = "public"
   port = 3000
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["esbuild", "vscode-oniguruma", "keyv", "@kentcdodds/md-temp"]
+  included_files = ["app/content/**", "node_modules/@kentcdodds/md-temp/dist/base16.json", "node_modules/shiki/languages/**"]
 
 [[redirects]]
   from = "/*"

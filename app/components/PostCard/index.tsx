@@ -1,7 +1,6 @@
-import { Link } from "remix";
 import React from "react";
-import { Post } from "~/utils/posts.server";
-import { Project } from "~/utils/projects";
+import { Link } from "remix";
+import { Post } from "~/utils/posts/posts.server";
 import { H4 } from "../Typography";
 import { routes } from "~/routes";
 

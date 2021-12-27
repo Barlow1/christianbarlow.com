@@ -8,18 +8,18 @@ pre {
   --base00: #011627; /* editor background */
   --base01: #2d2d2d; /* unused (currently) */
   --base02: #424242; /* unused (currently) */
-  --base03: #637777; /* code comments */
+  --base03: #bebebe; /* code comments */
   --base04: #555555; /* unused (currently) */
-  --base05: #d6deeb; /* fallback font color */
+  --base05: #6fa7d4; /* fallback font color */
   --base06: #c8c8c8; /* unused (currently) */
   --base07: #fafafa; /* unused (currently) */
-  --base08: #d7dbe0; /* variable references */
+  --base08: #569CD6; /* variable references */
   --base09: #f78c6c; /* numbers */
-  --base0A: #c792ea; /* keywords */
+  --base0A: #C586C0; /* keywords */
   --base0B: #ecc48d; /* strings */
   --base0C: #f78c6c; /* escape characters in strings */
-  --base0D: #82aaff; /* function calls */
-  --base0E: #c792ea; /* operators */
+  --base0D: #DCDCAA; /* function calls */
+  --base0E: #ffffff; /* operators */
   --base0F: #d3423e; /* "Embedded" (whatever that means) */
 }
 
