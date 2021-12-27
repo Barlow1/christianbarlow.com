@@ -42,9 +42,9 @@ export const action: ActionFunction = async ({ request, params }) => {
   let data;
   invariant(slug, "missing slug param");
   console.log("marking as read");
-  if (process.env.NODE_ENV === "production") {
-    console.log('marking as read');
-    data = await incrementPostViews(slug)
+  if (process.env.CONTEXT === "production") {
+    console.log("marking as read");
+    data = await incrementPostViews(slug);
   }
   return json({ success: true, data: data  });
 };
