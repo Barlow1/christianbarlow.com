@@ -1,4 +1,4 @@
-export default async function getPostsMetaData(slug: string) {
+export default async function incrementPostViews(slug: string) {
   const baseUrl = process.env.BASE_URL;
   const url = `${baseUrl}/.netlify/functions/increment-post-views?slug=${slug}`;
   try {

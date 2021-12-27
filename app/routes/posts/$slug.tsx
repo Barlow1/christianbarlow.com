@@ -1,11 +1,10 @@
 import { LoaderFunction, useLoaderData, LinksFunction } from "remix";
 import invariant from "tiny-invariant";
 import Grid from "~/components/Grid";
-import { getPost } from "~/utils/posts/posts.server";
+import { getPost, incrementPostViews } from "~/utils/posts/posts.server";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useEffect, useMemo } from "react";
 import { Paragraph } from "~/components/Typography";
-import incrementPostViews from "~/utils/posts/incrementPostViews";
 
 export type MDXPost = {
   slug: string;

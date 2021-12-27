@@ -1,5 +1,6 @@
 import getPostsMetaData from "./getPostMetaData";
 import fetchPost from "./fetchPost";
+import incrementViews from "./incrementPostViews";
 
 export type Post = {
   slug: string;
@@ -23,4 +24,8 @@ export async function getPost(slug: string) {
     date: post.createdAt,
     views: post.views,
   };
+}
+
+export async function incrementPostViews(slug: string) {
+  return incrementViews(slug);
 }
