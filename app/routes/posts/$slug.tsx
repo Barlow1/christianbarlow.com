@@ -39,11 +39,14 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const { slug } = params;
+  let data;
   invariant(slug, "missing slug param");
   console.log("marking as read");
-  process.env.NODE_ENV === "production"
-    ? await incrementPostViews(slug) : null;
-  return json({ success: true });
+  if (process.env.NODE_ENV === "production") {
+    console.log('marking as read');
+    data = await incrementPostViews(slug)
+  }
+  return json({ success: true, data: data  });
 };
 
 const useOnRead = (onRead: Function) => {
@@ -102,8 +105,8 @@ export default function PostSlug() {
   useEffect(() => {
     markAsReadRef.current = markAsRead;
   }, [markAsRead]);
-  
-  useOnRead(() => markAsReadRef.current.submit({}, { method: "post" }))
+
+  useOnRead(() => markAsReadRef.current.submit({}, { method: "post" }));
 
   return (
     <>
