@@ -1,9 +1,16 @@
-import { LoaderFunction, useLoaderData, LinksFunction } from "remix";
+import {
+  LoaderFunction,
+  useLoaderData,
+  LinksFunction,
+  useFetcher,
+  ActionFunction,
+  json,
+} from "remix";
 import invariant from "tiny-invariant";
 import Grid from "~/components/Grid";
 import { getPost, incrementPostViews } from "~/utils/posts/posts.server";
 import { getMDXComponent } from "mdx-bundler/client";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Paragraph } from "~/components/Typography";
 
 export type MDXPost = {
@@ -30,6 +37,15 @@ export const loader: LoaderFunction = async ({ params }) => {
   return getPost(params.slug);
 };
 
+export const action: ActionFunction = async ({ request, params }) => {
+  const { slug } = params;
+  invariant(slug, "missing slug param");
+  console.log("marking as read");
+  process.env.NODE_ENV === "production"
+    ? await incrementPostViews(slug) : null;
+  return json({ success: true });
+};
+
 const useOnRead = (onRead: Function) => {
   let startTime = new Date().getTime();
   let timeOut = 60000; // 1 min
@@ -42,7 +58,7 @@ const useOnRead = (onRead: Function) => {
       onRead();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     }, timeOut);
-  }
+  };
 
   const handleVisibilityChange = () => {
     if (document.hidden) {
@@ -53,10 +69,11 @@ const useOnRead = (onRead: Function) => {
       startTime = new Date().getTime();
       startTimer();
     }
-  }
+  };
+
   const removeVisibiltyListener = () => {
     document.removeEventListener("visibilitychange", handleVisibilityChange);
-  }
+  };
 
   useEffect(() => {
     return () => {
@@ -79,14 +96,21 @@ export default function PostSlug() {
 
   const postdate = new Date(post.date);
   const datePosted = postdate.toLocaleString();
-  const markAsRead = () => incrementPostViews(post.slug);
 
-  process.env.NODE_ENV === "production" ? useOnRead(markAsRead) : null;
+  const markAsRead = useFetcher();
+  const markAsReadRef = useRef(markAsRead);
+  useEffect(() => {
+    markAsReadRef.current = markAsRead;
+  }, [markAsRead]);
+  
+  useOnRead(() => markAsReadRef.current.submit({}, { method: "post" }))
 
   return (
     <>
       <Paragraph className="mt-2">Posted: {datePosted}</Paragraph>
-      <Paragraph className="mb-2">Viewed {post.views} {post.views === 1 ? 'time' : 'times' }</Paragraph>
+      <Paragraph className="mb-2">
+        Viewed {post.views} {post.views === 1 ? "time" : "times"}
+      </Paragraph>
       <Grid className="prose prose-light dark:prose-dark mb-24 mt-5 mx-auto">
         <MDXContentComponent />
       </Grid>
