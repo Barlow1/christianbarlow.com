@@ -41,12 +41,12 @@ export const action: ActionFunction = async ({ request, params }) => {
   const { slug } = params;
   let data;
   invariant(slug, "missing slug param");
-  console.log("marking as read");
+  console.log('context', process.env.CONTEXT);
   if (process.env.CONTEXT === "production") {
     console.log("marking as read");
     data = await incrementPostViews(slug);
   }
-  return json({ success: true, data: data  });
+  return json({ success: true, data: data });
 };
 
 const useOnRead = (onRead: Function) => {

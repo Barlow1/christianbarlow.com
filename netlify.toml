@@ -6,7 +6,7 @@
   publish = "public"
 
 [context.production]
-environment = { CONTEXT = "production" }
+  environment = { CONTEXT = "production" }
 
 [dev]
   functions = "netlify/functions"
