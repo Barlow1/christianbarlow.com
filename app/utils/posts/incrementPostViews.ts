@@ -1,5 +1,5 @@
 export default async function getPostsMetaData(slug: string) {
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = process.env.BASE_URL;
   const url = `${baseUrl}/.netlify/functions/increment-post-views?slug=${slug}`;
   try {
     const response = await fetch(url);

@@ -1,5 +1,5 @@
 export default async function getPostsMetaData() {
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = process.env.BASE_URL;
   const url = `${baseUrl}/.netlify/functions/get-posts`;
   try {
     const response = await fetch(url);
