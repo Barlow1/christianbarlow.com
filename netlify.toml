@@ -15,7 +15,7 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["esbuild", "vscode-oniguruma", "keyv", "@kentcdodds/md-temp"]
+  external_node_modules = ["esbuild", "vscode-oniguruma", "keyv", "@kentcdodds/md-temp", "@react-spring/core", "@react-spring/web"]
   included_files = ["app/content/**", "node_modules/@kentcdodds/md-temp/dist/base16.json", "node_modules/shiki/languages/**"]
 
 [[redirects]]
