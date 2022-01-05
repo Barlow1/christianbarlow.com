@@ -9,6 +9,13 @@ export type Project = {
 export function getProjects(): Project[] {
   return [
     {
+      name: "3D Model House Configurator",
+      description: "Building cutting edge housing how you want it.",
+      libraries: ["React", "nodeJS", "react-three-fiber", "3D Models"],
+      url: "https://build.christianbarlow.com",
+      repo: "https://github.com/Barlow1/build-concept",
+    },
+    {
       name: "Random Meal Generator",
       description: "Don't know what to cook dinner? We got you.",
       libraries: ["React", "nodeJS"],
