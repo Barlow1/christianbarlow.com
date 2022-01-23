@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <>
       <NewsletterForm />
-      <p>&copy; 2021 Christian Barlow</p>
+      <p>&copy; 2022 Christian Barlow</p>
     </>
   );
 }
