@@ -18,6 +18,7 @@ import { ReactNode } from "react";
 import useTheme from "./hooks/useTheme";
 import { Navigation } from "./components/Navigation";
 import faCss from '@fortawesome/fontawesome-svg-core/styles.css'
+import { Footer } from "./components/Footer";
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -150,7 +151,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       </div>
       <footer className="remix-app__footer">
         <div className="container remix-app__footer-content">
-          <p>&copy; 2021 Christian Barlow</p>
+          <Footer />
         </div>
       </footer>
     </div>
