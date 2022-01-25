@@ -17,18 +17,19 @@ interface Content {
 
 const prisma = new PrismaClient();
 
+type UpdateContentParameters = {
+  slug: string;
+}
+
 /* export our lambda function as named "handler" export */
 export const handler: Handler = async (event, context) => {
+  const { slug } = event.queryStringParameters as UpdateContentParameters;
   await prisma.$connect();
   let postsPath = path.join(
     "app/",
     "content"
   );
-  const postDir = await fs.readdir(postsPath);
-
-  const compiledPosts: Content[] = await Promise.all(
-    postDir.map(async (fileName) => {
-      const found = fileName;
+      const found = slug;
       const isFile = found?.includes(".");
       const contentDirectory = path.join(postsPath, found);
       const mdxPath = isFile
@@ -63,15 +64,7 @@ export const handler: Handler = async (event, context) => {
           return options;
         },
       });
-      const slug = fileName.replace(/.md[x]*/, "");
-
-      return { code, frontmatter, slug };
-    })
-  );
-
-  return Promise.all(
-    compiledPosts.map(({ code, frontmatter, slug }) => {
-      const response = prisma.post.upsert({
+      return prisma.post.upsert({
         where: {
           slug: slug,
         },
@@ -87,11 +80,7 @@ export const handler: Handler = async (event, context) => {
           views: 0,
           body: code,
         },
-      });
-      return response;
-    })
-  )
-    .then((resp) => {
+      }).then((resp) => {
       console.log("update success", resp);
       return {
         statusCode: 200,
@@ -104,5 +93,7 @@ export const handler: Handler = async (event, context) => {
         statusCode: 400,
         body: JSON.stringify(error),
       };
-    });
-};
+    }).finally(() => {
+      prisma.$disconnect();
+    })
+  };
