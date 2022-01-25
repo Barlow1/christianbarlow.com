@@ -3,8 +3,8 @@ import InputError from "./InputError";
 export interface FieldProps {
   name: string;
   type: string;
-  error: string | null;
   label: string;
+  error?: string | null;
   disabled?: boolean;
 }
 
