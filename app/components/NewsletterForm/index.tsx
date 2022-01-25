@@ -1,5 +1,6 @@
 import { useFetcher } from "remix";
 import { ActionData } from "~/utils/newsletter/types";
+import Field from "../FormElements/Field";
 import { H4, Paragraph } from "../Typography";
 
 export function NewsletterForm() {
@@ -49,37 +50,3 @@ export function NewsletterForm() {
   );
 }
 
-interface FieldProps {
-  name: string;
-  type: string;
-  error: string | null;
-  label: string;
-  disabled?: boolean;
-}
-
-function Field({ name, type, error, label, disabled }: FieldProps) {
-  const errorId = `${name}-error`;
-  return (
-    <>
-      <label htmlFor={name}>{label}</label>
-      {error ? <InputError id={errorId}>{error}</InputError> : null}
-      <input disabled={disabled} name={name} type={type} />
-    </>
-  );
-}
-
-interface InputErrorProps {
-  id: string;
-  children?: string | null;
-}
-
-function InputError({ children, id }: InputErrorProps): JSX.Element | null {
-  if (!children) {
-    return null;
-  }
-  return (
-    <p role={"alert"} id={id} className="text-red-500 text-sm">
-      {children}
-    </p>
-  );
-}

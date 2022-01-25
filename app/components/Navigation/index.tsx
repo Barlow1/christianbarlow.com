@@ -27,6 +27,11 @@ const linkComponents = {
       {routes.projects.title}
     </Link>
   ),
+  contact: (
+    <Link to={`${routes.contact.path}`} className="underlined">
+      {routes.contact.title}
+    </Link>
+  ),
 };
 
 export function MobileNavigation() {
@@ -101,6 +106,7 @@ export function DesktopNavigation() {
         <li>{linkComponents.home}</li>
         <li>{linkComponents.posts}</li>
         <li>{linkComponents.projects}</li>
+        <li>{linkComponents.contact}</li>
       </ul>
     </nav>
   );
