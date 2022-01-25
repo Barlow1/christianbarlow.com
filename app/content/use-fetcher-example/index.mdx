@@ -1,0 +1,375 @@
+---
+title: Simple useFetcher Remix Form Example
+date: 2022-01-25T02:49:33.241Z
+img: https://i.ibb.co/BntRf8d/form.webp
+---
+
+<img src={frontmatter.img} alt="Paper Form" />
+
+# {frontmatter.title}
+
+The basics of the browser form are often lost with modern React framworks. Remix harnesses the power of forms to deliver a fantastic user experience.
+useFetcher can be a little confusing at first but it is so powerful!
+
+Let's create a simple contact form example in remix.
+
+#### Form Setup
+
+First, create `contact.tsx` in your `routes` folder. useFetcher has a Form attribute so we want to use contactForm.Form as our form.
+
+```tsx filename=app/routes/contact.tsx
+export default function ContactPage() {
+  const ref = useRef<HTMLFormElement>(null);
+  const contactForm = useFetcher();
+
+  return (
+    <contactForm.Form ref={ref} action="/contact" method="post">
+      <h4>Nice to meet you. Let's chat!</h4>
+    </contactForm.Form>
+  );
+}
+```
+#### Field Component
+
+Next, let's make a Field component that makes it easy to add labels and errors to our input fields. You can just copy this component and use it in your project if you'd like.
+
+```tsx filename=app/components/Field.tsx
+export interface InputErrorProps {
+  id: string;
+  children?: string | null;
+}
+
+export function InputError({
+  children,
+  id,
+}: InputErrorProps): JSX.Element | null {
+  if (!children) {
+    return null;
+  }
+  return (
+    <p role={"alert"} id={id} className="text-red-500 text-sm">
+      {children}
+    </p>
+  );
+}
+
+export interface FieldProps {
+  name: string;
+  type: string;
+  label: string;
+  disabled?: boolean;
+  error?: string | null;
+}
+
+export default function Field({
+  name,
+  type,
+  error,
+  label,
+  disabled,
+}: FieldProps) {
+  const errorId = `${name}-error`;
+  const getInputByType = (type: string) => {
+    switch (type) {
+      case "textarea":
+        return <textarea disabled={disabled} name={name}></textarea>;
+        break;
+      default:
+        return <input disabled={disabled} name={name} type={type} />;
+    }
+  };
+  const input = getInputByType(type);
+  return (
+    <>
+      <label htmlFor={name}>{label}</label>
+      {error ? <InputError id={errorId}>{error}</InputError> : null}
+      {input}
+    </>
+  );
+}
+```
+#### Add Fields
+
+We are ready to add some fields and a submit button to our form. I am going to add name, email and message fields to the contact form.
+
+```tsx filename=app/routes/contact.tsx
+export default function ContactPage() {
+const ref = useRef<HTMLFormElement>(null);
+const contactForm = useFetcher();
+
+return (
+  <contactForm.Form ref={ref} action="/contact" method="post">
+    <h4>Nice to meet you. Let's chat!</h4>
+     <Field
+      name="name"
+      type="text"
+      label="Name"
+    />
+    <Field
+      name="email"
+      type="email"
+      label="Email"
+    />
+    <Field
+      name="message"
+      type="textarea"
+      label="Message"
+    />
+    <button type="submit" className="underlined pt-1">Send</button>}
+  </contactForm.Form>
+);}
+```
+#### Validation
+
+From here, we start to unlock some of the remix magic. We want to write a handler for our form to validate the fields and submit an email. With remix, we can write this handler in an action function.
+
+```tsx filename=app/routes/contact.tsx
+export type Fields = {
+  name: string;
+  email: string;
+  message: string;
+};
+export type Errors = Record<keyof Fields | "generalError", string | null>;
+
+export type ActionData =
+  | { status: "success" }
+  | { status: "error"; errors: Errors };
+
+function getErrorForFirstName(name: string | null) {
+  if (!name) return `Name is required`;
+  if (name.length > 60) return `Name is too long`;
+  return null;
+}
+
+function getErrorForEmail(email: string | null) {
+  if (!email) return `Email is required`;
+  if (!/^.+@.+\..+$/.test(email)) return `Email is not valid`;
+  return null;
+}
+
+function getErrorForMessage(message: string | null) {
+  if (!message) return `Message is required`;
+  return null;
+}
+
+export const action: ActionFunction = ({ request }: { request: Request }) => {
+  const requestText = await request.text();
+  const form = new URLSearchParams(requestText);
+
+  const fields: Fields = {
+    name: form.get("name") ?? "",
+    email: form.get("email") ?? "",
+    message: form.get("message") ?? "",
+  };
+
+  const errors: Errors = {
+    generalError: null,
+    name: getErrorForFirstName(fields.name),
+    email: getErrorForEmail(fields.email),
+    message: getErrorForMessage(fields.message),
+  };
+
+  let data: ActionData;
+
+  if (Object.values(errors).some((err) => err !== null)) {
+    data = { status: "error", errors };
+    return json(data, 400);
+  }
+
+  try {
+    // create a sendEmail function that uses the email provider of your choice
+    sendEmail(fields);
+  } catch (error: unknown) {
+    errors.generalError = getErrorMessage(error);
+    data = { status: "error", errors };
+    return json(data, 500);
+  }
+
+  data = { status: "success" };
+  return json(data);
+};
+```
+
+We pull the form data by parsing the URL search params like so.
+
+```tsx filename=app/routes/contact.tsx
+const requestText = await request.text();
+const form = new URLSearchParams(requestText);
+
+const fields: Fields = {
+  name: form.get("name") ?? "",
+  email: form.get("email") ?? "",
+  message: form.get("message") ?? "",
+};
+```
+
+The `sendEmail` function is left out of this tutorial for simplicity sake but you can create a sendEmail function with the email provider of your choice. If you're curious, I'm using mailgun in my personal contact form.
+
+Now that we have some validation occuring in our action, we can alter our form to reflect that response. We can access the data from our useFetcher by accessing the data atribute.
+
+Add the following variables to your contract page component.
+
+```tsx filename=app/routes/contact.tsx
+const data = contactForm.type === "done" ? contactForm.data : null;
+const success = data?.status === "success";
+```
+
+We can add an error to our field component by supplying any errors returned from the action. Add error and disabled prop to each of the fields. The disabled prop will now disable the form if the form is loading state or it has returned successfully.
+
+```tsx filename=app/routes/contact.tsx
+<Field
+  name="name"
+  type="text"
+  label="Name"
+  error={data?.status === "error" ? data.errors.name : null}
+  disabled={contactForm.state === "loading" || success}
+/>
+```
+
+The user should know their email has been sent successfully. Let's use the success variable we just created to render a success message in the place of our submit button if the email has been sent successfully.
+
+```tsx filename=app/routes/contact.tsx
+{
+  success ? (
+    <p>Success! Your email has been sent.</p>
+  ) : (
+    <button type="submit" className="underlined pt-1">
+      Send
+    </button>
+  );
+}
+```
+
+I also wanted the form to reset after it was submitted, so I added a useEffect for that.
+
+```tsx filename=app/routes/contact.tsx
+useEffect(() => {
+    if (ref.current && success) {
+        ref.current.reset();
+    }
+}, [success])
+```
+### Final Thoughts
+
+And that's it! You've got a functional contact form with validation and user feedback in Remix. The full code for the contact route is below. Happy coding!
+
+```tsx filename=app/routes/contact.tsx
+import { useEffect, useRef } from "react";
+import { ActionFunction, useFetcher } from "remix";
+import Field from "~/components/FormElements/Field";
+import { json } from "remix";
+import { sendEmail } from "../utils/mailgun.server";
+
+export type Fields = {
+  name: string;
+  email: string;
+  message: string;
+};
+export type Errors = Record<keyof Fields | "generalError", string | null>;
+
+export type ActionData =
+  | { status: "success" }
+  | { status: "error"; errors: Errors };
+
+function getErrorForFirstName(name: string | null) {
+  if (!name) return `Name is required`;
+  if (name.length > 60) return `Name is too long`;
+  return null;
+}
+
+function getErrorForEmail(email: string | null) {
+  if (!email) return `Email is required`;
+  if (!/^.+@.+\..+$/.test(email)) return `Email is not valid`;
+  return null;
+}
+
+function getErrorForMessage(message: string | null) {
+  if (!message) return `Message is required`;
+  return null;
+}
+
+function getErrorMessage(error: unknown) {
+  if (typeof error === "string") return error;
+  if (error instanceof Error) return error.message;
+  return "Unknown Error";
+}
+
+export const action: ActionFunction = async ({ request }: { request: Request }) => {
+  const requestText = await request.text();
+  const form = new URLSearchParams(requestText);
+
+  const fields: Fields = {
+    name: form.get("name") ?? "",
+    email: form.get("email") ?? "",
+    message: form.get("message") ?? "",
+  };
+
+  const errors: Errors = {
+    generalError: null,
+    name: getErrorForFirstName(fields.name),
+    email: getErrorForEmail(fields.email),
+    message: getErrorForMessage(fields.message),
+  };
+
+  let data: ActionData;
+
+  if (Object.values(errors).some((err) => err !== null)) {
+    data = { status: "error", errors };
+    return json(data, 400);
+  }
+
+  try {
+    // create a sendEmail function that uses the email provider of your choice
+    sendEmail(fields);
+  } catch (error: unknown) {
+    errors.generalError = getErrorMessage(error);
+    data = { status: "error", errors };
+    return json(data, 500);
+  }
+
+  data = { status: "success" };
+  return json(data);
+};
+
+export default function ContactPage() {
+const ref = useRef<HTMLFormElement>(null);
+const contactForm = useFetcher();
+const data = contactForm.type === "done" ? contactForm.data : null;
+const success = data?.status === "success";
+
+useEffect(() => {
+    if (ref.current && success) {
+        ref.current.reset();
+    }
+}, [success])
+return (
+  <contactForm.Form ref={ref} action="/contact" method="post">
+    <h4>Nice to meet you. Let's chat!</h4>
+    <Field
+      name="name"
+      type="text"
+      label="Name"
+      error={data?.status === "error" ? data.errors.name : null}
+      disabled={contactForm.state === "loading" || success}
+    />
+    <Field
+      name="email"
+      type="email"
+      label="Email"
+      error={data?.status === "error" ? data.errors.email : null}
+      disabled={contactForm.state === "loading" || success}
+    />
+    <Field
+      name="message"
+      type="textarea"
+      label="Message"
+      error={data?.status === "error" ? data.errors.message : null}
+      disabled={contactForm.state === "loading" || success}
+    />
+    {success ? <p>Success! Your email has been sent.</p>: <button type="submit" className="underlined pt-1">
+      Send
+    </button>}
+  </contactForm.Form>
+);}
+```
+
