@@ -27,7 +27,7 @@ return (
     <Field
       name="name"
       type="text"
-      label="First Name"
+      label="Name"
       error={data?.status === "error" ? data.errors.name : null}
       disabled={contactForm.state === "loading" || success}
     />
