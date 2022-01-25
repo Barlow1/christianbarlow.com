@@ -10,5 +10,9 @@ export const routes = {
   projects: {
       title: "Projects",
       path: "/projects"
+  },
+  contact: {
+    title: "Contact",
+    path: "/contact"
   }
 };

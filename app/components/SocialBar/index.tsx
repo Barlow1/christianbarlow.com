@@ -6,6 +6,7 @@ import {
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { routes } from "~/routes";
 
 const socials = {
   linkedin: {
@@ -18,7 +19,7 @@ const socials = {
     link: "https://github.com/Barlow1",
   },
   email: {
-    link: "mailto:c.barlow108%40gmail.com?subject=ChristianBarlow.com",
+    link: routes.contact.path,
   },
 };
 
