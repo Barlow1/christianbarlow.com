@@ -8,10 +8,11 @@ import {
 } from "remix";
 import invariant from "tiny-invariant";
 import Grid from "~/components/Grid";
-import { getPost, incrementPostViews } from "~/utils/posts/posts.server";
+import { getPost, getPosts, incrementPostViews } from "~/utils/posts/posts.server";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useEffect, useMemo, useRef } from "react";
 import { Paragraph } from "~/components/Typography";
+import { SEOHandle } from "@balavishnuvj/remix-seo";
 
 export type MDXPost = {
   slug: string;
@@ -22,6 +23,16 @@ export type MDXPost = {
   frontmatter: { [key: string]: any };
   views: number;
 };
+
+export const handle: SEOHandle = {
+  getSitemapEntries: async (request) => {
+    const blogs = await getPosts();
+    return blogs.map((blog) => {
+      return { route: `/posts/${blog.slug}`, priority: 0.7 };
+    });
+  },
+};
+
 
 export let links: LinksFunction = () => {
   return [
