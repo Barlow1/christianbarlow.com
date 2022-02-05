@@ -12,7 +12,7 @@ export function PostCard({ post }: { post: Post }) {
       prefetch="intent"
     >
       <div className="relative border-2 hover:border-primary border-secondary rounded-lg m-2 p-5 bg-secondary">
-        {post.img && <img src={post.img} />}
+        {post.img && <img className="m-auto w-64 h-64" src={post.img} />}
         <H4>{post.title}</H4>
       </div>
     </Link>
