@@ -31,6 +31,9 @@
   --border-secondary: var(--color-gray-200);
   --text-primary: var(--color-black);
   --text-secondary: var(--color-gray-500);
+  --color-border: var(--color-gray-200);
+  --color-links: hsl(213, 100%, 50%);
+  --color-links-hover: hsl(213, 100%, 60%);
 }
 
 .dark {
@@ -114,7 +117,7 @@ input:where([type="email"]) {
 }
 
 textarea {
-   display: block;
+  display: block;
   border: 1px solid var(--color-border);
   width: 100%;
   font: inherit;
@@ -277,7 +280,7 @@ textarea {
 }
 
 .underlined:after {
-  content: '';
+  content: "";
   height: 2px;
   transform: scaleX(0);
   transition: transform 0.25s ease;
@@ -307,4 +310,230 @@ textarea {
   .active.underlined:after {
     opacity: 1;
   }
+}
+
+/************ Dark Mode Toggle Styles ************/
+
+:root {
+  /** sunny side **/
+  --blue-background: #c2e9f6;
+  --blue-border: #108dad;
+  --blue-color: #96dcee;
+  --yellow-background: #fffaa8;
+  --yellow-border: #f5eb71;
+  /** dark side **/
+  --indigo-background: #808fc7;
+  --indigo-border: #808bbc;
+  --indigo-color: #6b7abb;
+  --gray-border: #e8e8ea;
+  --gray-dots: #e8e8ea;
+}
+
+@keyframes reverse {
+  0% {
+    left: 47px;
+    width: 20px;
+  }
+  60% {
+    left: 3px;
+    width: 70px;
+  }
+  100% {
+    left: 3px;
+  }
+}
+
+@keyframes switch {
+  0% {
+    left: 3px;
+  }
+  60% {
+    left: 3px;
+    width: 70px;
+  }
+  100% {
+    left: 47px;
+    width: 20px;
+  }
+}
+
+/* If any child of this label gets focus, show these styles */
+.toggle--checkbox {
+  opacity: 0;
+  position: absolute;
+  left: -999vw;
+}
+
+.toggle--checkbox:focus + .toggle--label {
+  outline: var(--color-links) solid 2px;
+  outline-offset: 2px; /* transition: outline 100ms ease-in; */
+}
+
+/* background */
+.toggle--label {
+  width: 75px;
+  height: 30px;
+  background: var(--indigo-color);
+  border-radius: 100px;
+  border: 3px solid var(--indigo-border);
+  display: flex;
+  position: relative;
+  transition: all 350ms ease-in;
+  color: var(--indigo-color);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.toggle--checkbox:checked + .toggle--label {
+  background: var(--blue-color);
+  color: var(--blue-color);
+  border-color: var(--blue-border);
+}
+
+/* sun and moon */
+.toggle--checkbox:checked + .toggle--label:before {
+  animation-name: reverse;
+  animation-duration: 350ms;
+  animation-fill-mode: forwards;
+  transition: all 360ms ease-in;
+  background: var(--yellow-background);
+  border-color: var(--yellow-border);
+}
+
+.toggle--label:before {
+  animation-name: switch;
+  animation-duration: 350ms;
+  animation-fill-mode: forwards;
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--gray-border);
+  top: 1px;
+  left: 3px;
+  position: absolute;
+  border-radius: 40px;
+  background: white;
+}
+
+/* moon dimples */
+.toggle--label:after {
+  transition-delay: 0ms;
+  transition: all 250ms ease-in;
+  position: absolute;
+  content: "";
+  box-shadow: var(--gray-dots) -29px -1px 0 -2px,
+    var(--gray-dots) -26px -6px 0 -1px;
+  left: 79px;
+  top: 10px;
+  width: 6px;
+  height: 6px;
+  background: transparent;
+  border-radius: 50%;
+  opacity: 1;
+}
+
+.toggle--checkbox:checked + .toggle--label:after {
+  transition-delay: 50ms;
+  opacity: 0;
+}
+
+/* clouds */
+.toggle--checkbox:checked + .toggle--label .toggle--label-background {
+  width: 5px;
+  left: 40px;
+}
+
+.toggle--checkbox:checked + .toggle--label .toggle--label-background:before {
+  top: -4px;
+  left: -5px;
+  width: 20px;
+  height: 5px;
+}
+
+.toggle--checkbox:checked + .toggle--label .toggle--label-background:after {
+  top: 3px;
+  width: 20px;
+  height: 5px;
+  left: -10px;
+}
+
+/* stars */
+.toggle--label-background {
+  border-radius: 5px;
+  position: relative;
+  background: white;
+  left: 32px;
+  width: 6px;
+  transition: all 150ms ease-in;
+  top: 10px;
+  height: 4px;
+}
+
+.toggle--label-background:before {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  top: -8px;
+  border-radius: 5px;
+  background: white;
+  left: -20px;
+  transition: all 150ms ease-in;
+}
+
+.toggle--label-background:after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  left: -20px;
+  top: 8px;
+  border-radius: 5px;
+  background: white;
+  transition: all 150ms ease-in;
+}
+
+/************ Switch Styles ************/
+
+.react-switch-checkbox {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.react-switch-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  width: 50px;
+  height: 25px;
+  background: grey;
+  border-radius: 100px;
+  position: relative;
+  transition: background-color 0.2s;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.react-switch-label .react-switch-button {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 45px;
+  transition: 0.2s;
+  background: #fff;
+  box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
+}
+
+.react-switch-checkbox:checked + .react-switch-label .react-switch-button {
+  left: calc(100% - 2px);
+  transform: translateX(-100%);
+}
+
+.react-switch-label:active .react-switch-button {
+  width: 60px;
 }

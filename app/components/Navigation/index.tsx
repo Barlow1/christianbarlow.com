@@ -1,6 +1,7 @@
 import {
   Menu,
   MenuButton,
+  MenuItem,
   MenuItems,
   MenuLink,
   MenuPopover,
@@ -10,6 +11,9 @@ import { Link } from "remix";
 import { routes } from "~/routes";
 import { Sling as Hamburger } from "hamburger-react";
 import { Transition, animated } from "@react-spring/web";
+import useTheme from "~/hooks/useTheme";
+import { Theme } from "../ThemeProvider";
+import Switch from "../DarkModeSwitch";
 
 const linkComponents = {
   home: (
@@ -35,6 +39,14 @@ const linkComponents = {
 };
 
 export function MobileNavigation() {
+    const [theme, setTheme] = useTheme();
+    const toggleTheme = () => {
+      if (theme === Theme.DARK) {
+        setTheme(Theme.LIGHT);
+      } else {
+        setTheme(Theme.DARK);
+      }
+    };
   return (
     <div className="md:hidden">
       <Menu>
@@ -58,6 +70,7 @@ export function MobileNavigation() {
                   right: 0,
                 })}
                 className="z-50 bg-primary block md:hidden"
+                
               >
                 <Transition
                   items={isExpanded}
@@ -84,6 +97,23 @@ export function MobileNavigation() {
                           );
                         })}
                       </MenuItems>
+                      <MenuItem
+                        onClick={(event) => {
+                          event.preventDefault();
+                        }}
+                        onSelect={() => {}}
+                        onMouseUp={(event) => {
+                          event.preventDefault();
+                          toggleTheme();
+                        }}
+                      >
+                        <div className="mx-auto my-5">
+                          <Switch
+                            isOn={theme === Theme.LIGHT}
+                            handleToggle={toggleTheme}
+                          />
+                        </div>
+                      </MenuItem>
                     </animated.div>
                   )}
                 </Transition>
@@ -97,6 +127,14 @@ export function MobileNavigation() {
 }
 
 export function DesktopNavigation() {
+  const [theme, setTheme] = useTheme();
+  const toggleTheme = () => {
+    if (theme === Theme.DARK) {
+      setTheme(Theme.LIGHT);
+    } else {
+      setTheme(Theme.DARK);
+    }
+  };
   return (
     <nav
       aria-label="Main navigation"
@@ -107,6 +145,10 @@ export function DesktopNavigation() {
         <li>{linkComponents.posts}</li>
         <li>{linkComponents.projects}</li>
         <li>{linkComponents.contact}</li>
+        <Switch
+          isOn={theme === Theme.LIGHT}
+          handleToggle={toggleTheme}
+        />
       </ul>
     </nav>
   );
