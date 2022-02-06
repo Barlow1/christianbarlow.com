@@ -7,7 +7,7 @@ const Tag = ({ name }: { name: string }) => {
   return (
     <div
       style={{ width: "fit-content" }}
-      className="bg-alt rounded-md p-1 mr-2"
+      className="bg-alt rounded-md p-1 m-1 mr-2"
       key={name}
     >
       <span>{name}</span>
@@ -16,7 +16,7 @@ const Tag = ({ name }: { name: string }) => {
 };
 
 const TagList = ({ children }: { children: ReactNode }) => {
-  return <div className="flex">{children}</div>;
+  return <div className="flex flex-wrap">{children}</div>;
 };
 
 export function ProjectCard({ project }: { project: Project }) {

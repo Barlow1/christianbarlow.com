@@ -2,23 +2,26 @@ import {
   Link,
   Links,
   LiveReload,
+  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLoaderData,
 } from "remix";
 import type { LinksFunction } from "remix";
 
 import globalStylesUrl from "~/styles/global.css";
 import proseStyleUrl from "~/styles/prose.css";
-import tailwindStyleUrls from "~/styles/tailwind.css"
+import tailwindStyleUrls from "~/styles/tailwind.css";
 import ThemeProvider, { Theme } from "./components/ThemeProvider";
 import { ReactNode } from "react";
 import useTheme from "./hooks/useTheme";
 import { Navigation } from "./components/Navigation";
-import faCss from '@fortawesome/fontawesome-svg-core/styles.css'
+import faCss from "@fortawesome/fontawesome-svg-core/styles.css";
 import { Footer } from "./components/Footer";
+import { getThemeSession } from "./utils/sessions";
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -40,11 +43,30 @@ export let links: LinksFunction = () => {
   ];
 };
 
+type LoaderData = {
+  session: {
+    theme: Theme | undefined;
+  };
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const themeSession = await getThemeSession(request);
+  const theme = themeSession.getTheme();
+  const data: LoaderData = {
+    session: {
+      theme,
+    },
+  };
+  return data;
+};
+
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
 export default function App() {
+  const data = useLoaderData<LoaderData>();
+  const theme = data.session.theme;
   return (
-    <DocumentWithTheme>
+    <DocumentWithTheme theme={theme}>
       <Layout>
         <Outlet />
       </Layout>
@@ -60,11 +82,9 @@ export function ErrorBoundary({ error }: { error: Error }) {
       <Layout>
         <div>
           <h1>There was an unexpected error</h1>
-          {process.env.NODE_ENV === 'development' && ( <p>{error.message}</p>)}
+          {process.env.NODE_ENV === "development" && <p>{error.message}</p>}
           <hr />
-          <p>
-            Please try again in a few minutes.
-          </p>
+          <p>Please try again in a few minutes.</p>
         </div>
       </Layout>
     </DocumentWithTheme>
@@ -113,7 +133,7 @@ function Document({
   children: React.ReactNode;
   title?: string;
 }) {
-  const [theme] = useTheme()
+  const [theme] = useTheme();
   return (
     <html lang="en" className={theme}>
       <head>
@@ -133,8 +153,20 @@ function Document({
   );
 }
 
-function DocumentWithTheme ({children, ...rest}: {children: ReactNode; title?:string}): JSX.Element {
-  return (<ThemeProvider suppliedTheme={Theme.DARK}><Document {...rest}>{children}</Document></ThemeProvider>)
+function DocumentWithTheme({
+  children,
+  theme,
+  ...rest
+}: {
+  children: ReactNode;
+  title?: string;
+  theme?: Theme
+}): JSX.Element {
+  return (
+    <ThemeProvider suppliedTheme={theme}>
+      <Document {...rest}>{children}</Document>
+    </ThemeProvider>
+  );
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -160,17 +192,17 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 function Logo() {
   return (
-      <Link
-        to="/"
-        className="block text-2xl font-medium transition text-primary underlined whitespace-nowrap focus:outline-none"
-      >
-        <div className="flex">
-          <img
-            className={"w-10 h-10 md:w-14 md:h-14"}
-            src={"/android-chrome-192x192.png"}
-          ></img>
-          <h1 className="self-center pl-2">Christian Barlow</h1>
-        </div>
-      </Link>
+    <Link
+      to="/"
+      className="block text-2xl font-medium transition text-primary underlined whitespace-nowrap focus:outline-none"
+    >
+      <div className="flex">
+        <img
+          className={"w-10 h-10 md:w-14 md:h-14"}
+          src={"/android-chrome-192x192.png"}
+        ></img>
+        <h1 className="self-center pl-2">Christian Barlow</h1>
+      </div>
+    </Link>
   );
 }
