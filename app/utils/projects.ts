@@ -9,6 +9,13 @@ export type Project = {
 export function getProjects(): Project[] {
   return [
     {
+      name: "Ping Pong Tracker",
+      description: "Making workplaces more fun!",
+      libraries: ["React", "nodeJS", "remix", "tailwindcss"],
+      url: "https://pongtracker.christianbarlow.com",
+      repo: "https://github.com/Barlow1/PongTracker",
+    },
+    {
       name: "3D Model House Configurator",
       description: "Building cutting edge housing how you want it.",
       libraries: ["React", "nodeJS", "react-three-fiber", "3D Models"],
@@ -36,7 +43,8 @@ export function getProjects(): Project[] {
     },
     {
       name: "ClassScheduler",
-      description: "Genetic algorithm for creating somewhat optimal class schedules",
+      description:
+        "Genetic algorithm for creating somewhat optimal class schedules",
       libraries: ["Python"],
       repo: "https://github.com/Barlow1/ClassScheduler",
     },
