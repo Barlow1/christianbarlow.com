@@ -56,12 +56,12 @@ export default function Index() {
           aria-label="Head shot of me in a t-shirt"
           src="/me_at_the_plaza.png"
         />
-        <H2>React, Typescript, UX and Serverless, Oh my!</H2>
+        <H2>React, Typescript, Remix and UX, Oh my!</H2>
         <Paragraph>
-          Using code and writing to fulfill my passions for fan engagement,
+          Using code and writing to fulfill my passions for fan engagement, mentoring,
           student success, realty, and 3D virtual reality experiences. I like to
           break away from the computer to travel, cook, and explore with my
-          Fiancé Emma and cat Max.
+        wife Emma and cat Max.
         </Paragraph>
         <SocialBar />
         <H2>Recommended Posts</H2>
