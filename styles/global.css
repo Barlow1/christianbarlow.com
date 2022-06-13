@@ -242,7 +242,6 @@ textarea {
 .remix__page > aside {
   margin: 0;
   padding: 1.5ch 2ch;
-  border: solid 1px var(--color-border);
   border-radius: 0.5rem;
 }
 
