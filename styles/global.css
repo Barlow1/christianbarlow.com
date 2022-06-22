@@ -213,6 +213,7 @@ textarea {
   width: 100%;
   left: 0;
   right: 0;
+  pointer-events: none
 }
 .dock {
   position: relative;
