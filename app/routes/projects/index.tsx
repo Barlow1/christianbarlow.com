@@ -12,10 +12,12 @@ export default function Projects() {
   return (
     <div className="remix__page">
       <div>
-        <H1>Projects</H1>
-        {posts.map((project: Project) => (
-          <ProjectCard key={project.url} project={project} />
-        ))}
+        <H1 className="py-5">Projects</H1>
+        <div className="md:grid md:grid-cols-2 md:gap-4">
+          {posts.map((project: Project) => (
+            <ProjectCard key={project.url} project={project} />
+          ))}
+        </div>
       </div>
     </div>
   );

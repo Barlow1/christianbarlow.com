@@ -12,10 +12,12 @@ export default function Posts() {
     return (
       <div className="remix__page">
         <div>
-          <H1>Posts</H1>
+          <H1 className="py-5">Posts</H1>
+          <div className="md:grid md:grid-cols-2 md:gap-4">
             {posts.map((post: Post) => (
               <PostCard key={post.slug} post={post} />
             ))}
+            </div>
         </div>
       </div>
     );

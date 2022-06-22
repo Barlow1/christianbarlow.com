@@ -80,7 +80,7 @@ export default function Index() {
         <Divider />
         <div className="py-10">
           <H2 className="py-5 text-center">Projects</H2>
-          <div className="md:grid md:grid-cols-2 md:gap-4">
+          <div className="md:grid md:grid-cols-2 md:gap-4 justify-items-center">
             {data.projects.map((resource) => (
               <ProjectCard project={resource} key={resource.name} />
             ))}
