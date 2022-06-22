@@ -1,10 +1,11 @@
 import { Post } from "@prisma/client";
 import type { MetaFunction, LoaderFunction, LinksFunction } from "remix";
 import { useLoaderData, json } from "remix";
+import Divider from "~/components/Divider";
 import PostCard from "~/components/PostCard";
 import { ProjectCard } from "~/components/ProjectCard";
 import SocialBar from "~/components/SocialBar";
-import { H2, Paragraph } from "~/components/Typography";
+import { H1, H2, Paragraph } from "~/components/Typography";
 import { getPosts } from "~/utils/posts/posts.server";
 import { getProjects, Project } from "~/utils/projects";
 
@@ -49,32 +50,43 @@ export default function Index() {
   let data = useLoaderData<IndexData>();
 
   return (
-    <div className="remix__page">
+    <div className="remix__page justify-center content-center">
+      <SocialBar />
       <main>
-        <img
-          className="rounded-lg max-h-64 md:max-h-96 m-auto mb-5"
-          aria-label="Head shot of me in a t-shirt"
-          src="/me_at_the_plaza.png"
-        />
-        <H2>React, Typescript, Remix and UX, Oh my!</H2>
-        <Paragraph>
-          Using code and writing to fulfill my passions for fan engagement, mentoring,
-          student success, realty, and 3D virtual reality experiences. I like to
-          break away from the computer to travel, cook, and explore with my
-        wife Emma and cat Max.
-        </Paragraph>
-        <SocialBar />
-        <H2>Recommended Posts</H2>
-        {data.posts.map((demo) => (
-          <PostCard post={demo} key={demo.slug} />
-        ))}
+        <div className="md:grid md:grid-cols-2 md:gap-4 py-10">
+          <img
+            className="rounded-lg max-h-64 md:max-h-96 m-auto mb-5"
+            aria-label="Head shot of me in a t-shirt"
+            src="/me_at_the_plaza.png"
+          />
+          <div className="flex flex-col justify-center gap-4 text-center">
+            <H1>React, Typescript, Remix and UX, Oh my!</H1>
+            <Paragraph>
+              Using code and writing to fulfill my passions for
+              mentoring, student success, realty, and 3D virtual reality
+              experiences. I like to break away from the computer to travel,
+              cook, and explore with my wife Emma and cat Max.
+            </Paragraph>
+          </div>
+        </div>
+        <div className="py-10">
+          <H2 className="py-5 text-center">Recommended Posts</H2>
+          <div className="md:grid md:grid-cols-2 md:gap-4">
+            {data.posts.map((demo) => (
+              <PostCard post={demo} key={demo.slug} />
+            ))}
+          </div>
+        </div>
+        <Divider />
+        <div className="py-10">
+          <H2 className="py-5 text-center">Projects</H2>
+          <div className="md:grid md:grid-cols-2 md:gap-4">
+            {data.projects.map((resource) => (
+              <ProjectCard project={resource} key={resource.name} />
+            ))}
+          </div>
+        </div>
       </main>
-      <aside>
-        <H2>Projects</H2>
-        {data.projects.map((resource) => (
-          <ProjectCard project={resource} key={resource.name} />
-        ))}
-      </aside>
     </div>
   );
 }

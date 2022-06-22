@@ -21,7 +21,7 @@ const TagList = ({ children }: { children: ReactNode }) => {
 
 export function ProjectCard({ project }: { project: Project }) {
   return (
-    <div className="relative border-2 border-secondary rounded-lg m-2 p-5">
+    <div className="relative border-2 border-secondary rounded-lg m-2 p-5 max-w-md">
       <H4>{project.name}</H4>
       {project.description && <Paragraph>{project.description}</Paragraph>}
       {project.libraries && (

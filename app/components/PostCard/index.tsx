@@ -11,7 +11,7 @@ export function PostCard({ post }: { post: Post }) {
       to={`${routes.posts.path}/${post.slug}`}
       prefetch="intent"
     >
-      <div className="relative border-2 hover:border-primary border-secondary rounded-lg m-2 p-5 bg-secondary">
+      <div className="relative border-2 hover:border-primary border-secondary rounded-lg m-2 p-5 bg-secondary max-w-md md:hover:scale-105">
         {post.img && <img className="m-auto w-64 h-64" src={post.img} />}
         <H4>{post.title}</H4>
       </div>

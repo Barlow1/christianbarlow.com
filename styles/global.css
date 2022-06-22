@@ -206,51 +206,112 @@ textarea {
   align-items: center;
 }
 
-.remix__page {
-  --gap: 1rem;
-  --space: 2rem;
-  display: grid;
-  grid-auto-rows: -webkit-min-content;
-  grid-auto-rows: min-content;
-  gap: var(--gap);
-  padding-top: var(--space);
-  padding-bottom: var(--space);
+.dock-container {
+  position: fixed;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+  left: 0;
+  right: 0;
 }
-
-@media print, screen and (min-width: 640px) {
-  .remix__page {
-    --gap: 2rem;
-    grid-auto-rows: unset;
-    grid-template-columns: repeat(2, 1fr);
-  }
+.dock {
+  position: relative;
+  display: inline-block;
+  -webkit-perspective: 400;
+  -moz-perspective: 400;
 }
-
-@media screen and (min-width: 1024px) {
-  .remix__page {
-    --gap: 4rem;
-  }
+.dock .base {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 45px;
+  z-index: -10;
+  background-color: #888;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#333),
+    to(#ccc)
+  );
+  background-image: -webkit-linear-gradient(top, #333, #999);
+  background-image: -moz-linear-gradient(
+    top,
+    #333,
+    #999
+  ); /* Gradient works on FF 3.6+ */
+  opacity: 0.5;
+  border-bottom: 2px #aaa solid;
+  -webkit-transform-origin: 50% 100%;
+  -webkit-transform: rotateX(55deg); /* 3d - works on webkit only */
+  -moz-transform-origin: 50% 100%;
+  -moz-transform: rotateX(55deg); /* not supported on current 3.7 */
+  -o-transform-origin: 50% 100%;
+  -o-transform: rotateX(55deg); /* not supported on current 10.6 */
 }
-
-.remix__page > main > :first-child {
-  margin-top: 0;
-}
-
-.remix__page > main > :last-child {
-  margin-bottom: 0;
-}
-
-.remix__page > aside {
+.dock ul {
+  font-size: 14px;
+  padding: 0 30px;
   margin: 0;
-  padding: 1.5ch 2ch;
-  border-radius: 0.5rem;
+}
+.dock li {
+  list-style-type: none;
+  display: inline-block;
+  position: relative;
+}
+.dock li span {
+  display: none;
+  position: absolute;
+  bottom: 140px;
+  left: 0;
+  width: 100%;
+  background-color: var(--bg-secondary);
+  padding: 4px 0;
+  border-radius: 12px; /* webkit nightly */
+  -webkit-border-radius: 12px; /* for safari */
+  -moz-border-radius: 12px;
 }
 
-.remix__page > aside > :first-child {
-  margin-top: 0;
+.dock li:hover span {
+  display: block;
+}
+.dock li a svg {
+  min-width: 64px;
+  height: 64px;
+  margin-bottom: 10px;
+  -webkit-box-reflect: below 2px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.7, transparent), to(rgba(255, 255, 255, 0.5)));
+  -webkit-box-reflect: below 2px -webkit-linear-gradient(top, transparent, rgba(255, 255, 255, 0.3));
+  -webkit-transition: all 0.3s;
+  -webkit-transform-origin: 50% 100%;
+  -moz-transition: all 0.4s;
+  -moz-transform-origin: 50% 100%;
+  -o-transition: all 0.3s;
+  -o-transform-origin: 50% 100%;
+  margin-right: 0.1em;
+  margin-left: 0.1em;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background-color: var(--bg-alt);
+  padding: .1em;
+}
+@media (min-width: 768px) {
+  .dock li:hover a svg {
+    -webkit-transform: scale(1.5);
+    -moz-transform: scale(1.5);
+    -o-transform: scale(1.5);
+    margin: 0 0.5em 10px;
+  }
 }
 
-.remix__page > aside > :last-child {
-  margin-bottom: 0;
+@media (min-width: 768px) {
+  /* one element after and element before (with JS)*/
+  .dock li:hover + li a svg,
+  .dock li.prev svg {
+    -webkit-transform: scale(1.4);
+    -moz-transform: scale(1.4);
+    -o-transform: scale(1.4);
+    margin: 0 1.4em 10px;
+  }
 }
 
 .remix__form {
