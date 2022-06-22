@@ -220,6 +220,7 @@ textarea {
   display: inline-block;
   -webkit-perspective: 400;
   -moz-perspective: 400;
+  pointer-events: all;
 }
 .dock .base {
   position: absolute;
