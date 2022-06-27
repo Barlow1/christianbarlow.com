@@ -6,7 +6,6 @@ import {
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import { routes } from "~/routes";
 
 const socials = {
   linkedin: {
@@ -22,7 +21,7 @@ const socials = {
     label: "Github",
   },
   email: {
-    link: routes.contact.path,
+    link: '/contact',
     label: "Email me!",
   },
 };
@@ -66,7 +65,7 @@ export function SocialBar() {
   return (
     <div className="dock-container z-50">
       <div className="dock">
-        <ul>
+        <ul className="list-none">
           <li>
             <span>{socials.github.label}</span>
             <a href={socials.github.link}>

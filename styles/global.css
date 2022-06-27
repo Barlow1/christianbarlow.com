@@ -213,7 +213,7 @@ textarea {
   width: 100%;
   left: 0;
   right: 0;
-  pointer-events: none
+  pointer-events: none;
 }
 .dock {
   position: relative;
@@ -294,14 +294,15 @@ textarea {
   border: 1px solid var(--color-border);
   border-radius: 10px;
   background-color: var(--bg-alt);
-  padding: .1em;
+  padding: 0.1em;
+  pointer-events: stroke;
 }
 @media (min-width: 768px) {
   .dock li:hover a svg {
     -webkit-transform: scale(1.5);
     -moz-transform: scale(1.5);
     -o-transform: scale(1.5);
-    margin: 0 0.5em 10px;
+    margin: 0 0.75em 10px;
   }
 }
 
@@ -312,7 +313,7 @@ textarea {
     -webkit-transform: scale(1.4);
     -moz-transform: scale(1.4);
     -o-transform: scale(1.4);
-    margin: 0 1.4em 10px;
+    margin: 0 .5em 10px;
   }
 }
 

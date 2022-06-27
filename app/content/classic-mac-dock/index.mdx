@@ -1,0 +1,249 @@
+---
+title: Classic Mac Dock in React (CSS + JS)
+date: 2022-06-27T00:16:31.324Z
+img: https://media4.giphy.com/media/TKeoKYDIabT94ebDxy/giphy.gif
+---
+
+<img class="m-auto" src={frontmatter.img} alt="Classic Mac Dock" />
+
+import SocialBar from "./SocialBar.tsx";
+
+<SocialBar />
+
+# {frontmatter.title}
+
+#### What Possessed Me to Do This?
+
+I've always been a die hard apple fanboy & I am especially interested in Apple's software design.
+I'm constantly trying to make my website more unique so it stands out from the other cookie cutter blog sites.
+When I was fixing some layout issues for larger displays, I noticed my social icons where getting really
+spread out and looking funky. Instead of simply adding a max-width to the container of the social icons (a 2 sec change),
+I decided to implement the classic mac os x dock to display my social links in a unique way.
+
+#### How I Did It
+
+I found an awesome js fiddle and tweaked it to work for my website and decided I'd share my updated version
+of the dock. You can find the jsfiddle [here](https://jsfiddle.net/lespauled/jzj4sr52/).
+I verified that it works on all of my supported browsers (Firefox, Safari & Chrome), but I haven't tried others.
+Firefox has a more simplistic look since it doesn't support transparency as well as chrome and safari.
+
+#### CSS
+
+```css
+.dock-container {
+  position: fixed;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+  left: 0;
+  right: 0;
+  pointer-events: none
+}
+.dock {
+  position: relative;
+  display: inline-block;
+  -webkit-perspective: 400;
+  -moz-perspective: 400;
+  pointer-events: all;
+}
+.dock .base {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 45px;
+  z-index: -10;
+  background-color: #888;
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#333),
+    to(#ccc)
+  );
+  background-image: -webkit-linear-gradient(top, #333, #999);
+  background-image: -moz-linear-gradient(
+    top,
+    #333,
+    #999
+  ); /* Gradient works on FF 3.6+ */
+  opacity: 0.5;
+  border-bottom: 2px #aaa solid;
+  -webkit-transform-origin: 50% 100%;
+  -webkit-transform: rotateX(55deg); /* 3d - works on webkit only */
+  -moz-transform-origin: 50% 100%;
+  -moz-transform: rotateX(55deg); /* not supported on current 3.7 */
+  -o-transform-origin: 50% 100%;
+  -o-transform: rotateX(55deg); /* not supported on current 10.6 */
+}
+.dock ul {
+  font-size: 14px;
+  padding: 0 30px;
+  margin: 0;
+}
+.dock li {
+  list-style-type: none;
+  display: inline-block;
+  position: relative;
+}
+.dock li span {
+  display: none;
+  position: absolute;
+  bottom: 140px;
+  left: 0;
+  width: 100%;
+  background-color: var(--bg-secondary);
+  padding: 4px 0;
+  border-radius: 12px; /* webkit nightly */
+  -webkit-border-radius: 12px; /* for safari */
+  -moz-border-radius: 12px;
+}
+
+.dock li:hover span {
+  display: block;
+}
+.dock li a svg {
+  min-width: 64px;
+  height: 64px;
+  margin-bottom: 10px;
+  -webkit-box-reflect: below 2px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.7, transparent), to(rgba(255, 255, 255, 0.5)));
+  -webkit-box-reflect: below 2px -webkit-linear-gradient(top, transparent, rgba(255, 255, 255, 0.3));
+  -webkit-transition: all 0.3s;
+  -webkit-transform-origin: 50% 100%;
+  -moz-transition: all 0.4s;
+  -moz-transform-origin: 50% 100%;
+  -o-transition: all 0.3s;
+  -o-transform-origin: 50% 100%;
+  margin-right: 0.1em;
+  margin-left: 0.1em;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background-color: var(--bg-alt);
+  padding: .1em;
+  pointer-events: stroke;
+}
+@media (min-width: 768px) {
+  .dock li:hover a svg {
+    -webkit-transform: scale(1.5);
+    -moz-transform: scale(1.5);
+    -o-transform: scale(1.5);
+    margin: 0 0.5em 10px;
+  }
+}
+
+@media (min-width: 768px) {
+  /* one element after and element before (with JS)*/
+  .dock li:hover + li a svg,
+  .dock li.prev svg {
+    -webkit-transform: scale(1.4);
+    -moz-transform: scale(1.4);
+    -o-transform: scale(1.4);
+    margin: 0 1.4em 10px;
+  }
+}
+```
+
+#### REACT (HTML + JS)
+
+```tsx filename=SocialBar.tsx
+import React, { useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faGithub,
+  faLinkedin,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { routes } from "~/routes";
+
+const socials = {
+  linkedin: {
+    link: "https://www.linkedin.com/in/christianbarlow",
+    label: "LinkedIn",
+  },
+  twitter: {
+    link: "https://twitter.com/TheRealBarlow_",
+    label: "Twitter",
+  },
+  github: {
+    link: "https://github.com/Barlow1",
+    label: "Github",
+  },
+  email: {
+    link: routes.contact.path,
+    label: "Email me!",
+  },
+};
+
+export function SocialBar() {
+  useEffect(() => {
+    function addPrevClass(e: any) {
+      var target = e.target;
+      if (target.tagName === "svg") {
+        // check if it is an icon
+        var li = target.parentNode.parentNode;
+        var prevLi = li.previousElementSibling;
+        if (prevLi) {
+          prevLi.className = "prev";
+        }
+
+        target.addEventListener(
+          "mouseout",
+          function () {
+            if (prevLi) {
+              prevLi.removeAttribute("class");
+            }
+          },
+          false
+        );
+      }
+    }
+    if (window && document) {
+      document
+        .getElementsByClassName("dock")[0]
+        ?.addEventListener("mouseover", addPrevClass, false);
+    }
+
+    return () => {
+      // DESTROY
+      document
+      .getElementsByClassName("dock")[0]
+      ?.removeEventListener("mouseover", addPrevClass, false);
+    };
+  }, []);
+  return (
+    <div className="dock-container z-50">
+      <div className="dock">
+        <ul>
+          <li>
+            <span>{socials.github.label}</span>
+            <a href={socials.github.link}>
+              <FontAwesomeIcon icon={faGithub} size="3x"></FontAwesomeIcon>
+            </a>
+          </li>
+          <li>
+            <span>{socials.linkedin.label}</span>
+            <a href={socials.linkedin.link}>
+              <FontAwesomeIcon icon={faLinkedin} size="3x"></FontAwesomeIcon>
+            </a>
+          </li>
+          <li>
+            <span>{socials.twitter.label}</span>
+            <a href={socials.twitter.link}>
+              <FontAwesomeIcon icon={faTwitter} size="3x"></FontAwesomeIcon>
+            </a>
+          </li>
+          <li>
+            <span>{socials.email.label}</span>
+            <a href={socials.email.link}>
+              <FontAwesomeIcon icon={faPaperPlane} size="3x"></FontAwesomeIcon>
+            </a>
+          </li>
+        </ul>
+        <div className="base"></div>
+      </div>
+    </div>
+  );
+}
+
+export default SocialBar;
+```
