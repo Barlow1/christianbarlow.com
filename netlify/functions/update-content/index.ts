@@ -19,68 +19,69 @@ const prisma = new PrismaClient();
 
 type UpdateContentParameters = {
   slug: string;
-}
+};
 
 /* export our lambda function as named "handler" export */
 export const handler: Handler = async (event, context) => {
   const { slug } = event.queryStringParameters as UpdateContentParameters;
   await prisma.$connect();
-  let postsPath = path.join(
-    "app/",
-    "content"
-  );
-      const found = slug;
-      const isFile = found?.includes(".");
-      const contentDirectory = path.join(postsPath, found);
-      const mdxPath = isFile
-        ? contentDirectory
-        : path.join(contentDirectory, "index.mdx");
-      const mdxFile = await fs.readFile(mdxPath);
-      const mdxSource = mdxFile.toString().trim();
-      const files = !isFile
-        ? (await fs.readdir(contentDirectory)).reduce(
-            async (previousPromise, name) => {
-              const localPath = name.replace(contentDirectory, "./");
-              const relativePath = path.join(contentDirectory, name);
-              const content = (await fs.readFile(relativePath)).toString();
-              const previous = await previousPromise;
-              previous[localPath] = content;
-              return previous;
-            },
-            Promise.resolve({}) as Promise<Record<string, string>>
-          )
-        : undefined;
-      const { code, frontmatter } = await bundleMDX({
-        source: mdxSource,
-        files: await files,
-        xdmOptions(options) {
-          options.remarkPlugins = [
-            ...(options.remarkPlugins ?? []),
-            remarkCodeBlocksShiki,
-            remarkFrontmatter,
-            remarkMdxFrontmatter,
-          ];
+  let postsPath = path.join("app/", "content");
+  const found = slug;
+  const isFile = found?.includes(".");
+  const contentDirectory = path.join(postsPath, found);
+  const mdxPath = isFile
+    ? contentDirectory
+    : path.join(contentDirectory, "index.mdx");
+  const mdxFile = await fs.readFile(mdxPath);
+  const mdxSource = mdxFile.toString().trim();
+  const files = !isFile
+    ? (await fs.readdir(contentDirectory)).reduce(
+        async (previousPromise, name) => {
+          const localPath = name.replace(contentDirectory, "./");
+          const relativePath = path.join(contentDirectory, name);
+          const content = (await fs.readFile(relativePath)).toString();
+          const previous = await previousPromise;
+          previous[localPath] = content;
+          return previous;
+        },
+        Promise.resolve({}) as Promise<Record<string, string>>
+      )
+    : undefined;
+  const foundFiles = await files;
+  console.log("Files found: ", foundFiles);
+  const { code, frontmatter } = await bundleMDX({
+    source: mdxSource,
+    files: foundFiles,
+    xdmOptions(options) {
+      options.remarkPlugins = [
+        ...(options.remarkPlugins ?? []),
+        remarkCodeBlocksShiki,
+        remarkFrontmatter,
+        remarkMdxFrontmatter,
+      ];
 
-          return options;
-        },
-      });
-      return prisma.post.upsert({
-        where: {
-          slug: slug,
-        },
-        update: {
-          title: frontmatter.title,
-          img: frontmatter.img,
-          body: code,
-        },
-        create: {
-          title: frontmatter.title,
-          img: frontmatter.img,
-          slug: slug,
-          views: 0,
-          body: code,
-        },
-      }).then((resp) => {
+      return options;
+    },
+  });
+  return prisma.post
+    .upsert({
+      where: {
+        slug: slug,
+      },
+      update: {
+        title: frontmatter.title,
+        img: frontmatter.img,
+        body: code,
+      },
+      create: {
+        title: frontmatter.title,
+        img: frontmatter.img,
+        slug: slug,
+        views: 0,
+        body: code,
+      },
+    })
+    .then((resp) => {
       console.log("update success", resp);
       return {
         statusCode: 200,
@@ -93,7 +94,8 @@ export const handler: Handler = async (event, context) => {
         statusCode: 400,
         body: JSON.stringify(error),
       };
-    }).finally(() => {
-      prisma.$disconnect();
     })
-  };
+    .finally(() => {
+      prisma.$disconnect();
+    });
+};
