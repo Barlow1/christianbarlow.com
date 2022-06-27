@@ -52,7 +52,7 @@ export const handler: Handler = async (event, context) => {
   const { code, frontmatter } = await bundleMDX({
     source: mdxSource,
     files: foundFiles,
-    xdmOptions(options) {
+    mdxOptions(options) {
       options.remarkPlugins = [
         ...(options.remarkPlugins ?? []),
         remarkCodeBlocksShiki,
