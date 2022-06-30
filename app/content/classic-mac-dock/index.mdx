@@ -8,6 +8,10 @@ img: https://media4.giphy.com/media/TKeoKYDIabT94ebDxy/giphy.gif
 
 # {frontmatter.title}
 
+import Demo from 'Demo.tsx';
+
+<Demo />
+
 #### What Possessed Me to Do This?
 
 I've always been a die hard apple fanboy & I am especially interested in Apple's software design.
@@ -35,6 +39,7 @@ Firefox has a more simplistic look since it doesn't support transparency as well
   right: 0;
   pointer-events: none
 }
+
 .dock {
   position: relative;
   display: inline-block;
@@ -42,6 +47,7 @@ Firefox has a more simplistic look since it doesn't support transparency as well
   -moz-perspective: 400;
   pointer-events: all;
 }
+
 .dock .base {
   position: absolute;
   bottom: 0;
@@ -71,16 +77,28 @@ Firefox has a more simplistic look since it doesn't support transparency as well
   -o-transform-origin: 50% 100%;
   -o-transform: rotateX(55deg); /* not supported on current 10.6 */
 }
+
 .dock ul {
   font-size: 14px;
   padding: 0 30px;
   margin: 0;
 }
+
 .dock li {
   list-style-type: none;
   display: inline-block;
   position: relative;
 }
+
+.dock li a:hover {
+  color: var(--color-links-hover);
+  text-decoration: underline;
+}
+
+.dock li::before {
+  display: none;
+}
+
 .dock li span {
   display: none;
   position: absolute;
@@ -165,7 +183,7 @@ const socials = {
     label: "Github",
   },
   email: {
-    link: routes.contact.path,
+    link: '/contact',
     label: "Email me!",
   },
 };
@@ -243,3 +261,9 @@ export function SocialBar() {
 
 export default SocialBar;
 ```
+#### Conclusion
+
+I hope you enjoyed this brief tutorial. As always, thanks for coding with me. 
+Feel free to contact me if you have any questions.
+The lesson I took from building this: Build weird, cool stuff that makes you happy. 
+Don't build boring projects just to fluff up your portfolio. 

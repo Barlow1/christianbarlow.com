@@ -261,6 +261,16 @@ textarea {
   display: inline-block;
   position: relative;
 }
+
+.dock li a:hover {
+  color: var(--color-links-hover);
+  text-decoration: underline;
+}
+
+.dock li::before {
+  display: none;
+}
+
 .dock li span {
   display: none;
   position: absolute;
@@ -277,6 +287,7 @@ textarea {
 .dock li:hover span {
   display: block;
 }
+
 .dock li a svg {
   min-width: 64px;
   height: 64px;
@@ -313,7 +324,7 @@ textarea {
     -webkit-transform: scale(1.4);
     -moz-transform: scale(1.4);
     -o-transform: scale(1.4);
-    margin: 0 .5em 10px;
+    margin: 0 0.5em 10px;
   }
 }
 
