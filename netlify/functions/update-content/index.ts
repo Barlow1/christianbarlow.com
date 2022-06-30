@@ -5,8 +5,6 @@ import { PrismaClient } from "@prisma/client";
 import fs from "fs/promises";
 import { bundleMDX } from "mdx-bundler";
 import path from "path";
-import remarkFrontmatter from "remark-frontmatter";
-import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 const { remarkCodeBlocksShiki } = require("@kentcdodds/md-temp");
 
 interface Content {
@@ -57,8 +55,6 @@ export const handler: Handler = async (event, context) => {
       options.remarkPlugins = [
         ...(options.remarkPlugins ?? []),
         remarkCodeBlocksShiki,
-        remarkFrontmatter,
-        remarkMdxFrontmatter,
       ];
 
       console.log('mdxOptions: ', options);
