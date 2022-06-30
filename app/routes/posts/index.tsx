@@ -1,7 +1,8 @@
+import { Post } from "@prisma/client";
 import { Link, useLoaderData } from "remix";
 import PostCard from "~/components/PostCard";
 import { H1 } from "~/components/Typography";
-import { getPosts, Post } from "~/utils/posts/posts.server";
+import { getPosts } from "~/utils/posts/posts.server";
 
 export const loader = async () => {
     return getPosts();
