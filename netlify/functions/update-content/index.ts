@@ -46,8 +46,6 @@ export const handler: Handler = async (event, context) => {
       )
     : undefined;
   const foundFiles = await files;
-  console.log("Files found: ", foundFiles);
-  console.log("Source: ", mdxSource);
   const { code, frontmatter } = await bundleMDX({
     source: mdxSource,
     files: foundFiles,
@@ -57,13 +55,9 @@ export const handler: Handler = async (event, context) => {
         remarkCodeBlocksShiki,
       ];
 
-      console.log('mdxOptions: ', options);
-
       return options;
     },
   });
-  console.log('code: ', code);
-  console.log('frontmatter: ', frontmatter);
   return prisma.post
     .upsert({
       where: {
