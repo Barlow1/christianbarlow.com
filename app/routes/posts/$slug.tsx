@@ -5,14 +5,21 @@ import {
   useFetcher,
   ActionFunction,
   json,
+  MetaFunction,
 } from "remix";
 import invariant from "tiny-invariant";
 import Grid from "~/components/Grid";
-import { getPost, getPosts, incrementPostViews } from "~/utils/posts/posts.server";
+import {
+  getPost,
+  getPosts,
+  incrementPostViews,
+} from "~/utils/posts/posts.server";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useEffect, useMemo, useRef } from "react";
 import { Paragraph } from "~/components/Typography";
 import { SEOHandle } from "@balavishnuvj/remix-seo";
+import { getSocialMetas } from "~/utils/posts/seo";
+import { getDisplayUrl } from "~/utils/url";
 
 export type MDXPost = {
   slug: string;
@@ -33,7 +40,6 @@ export const handle: SEOHandle = {
   },
 };
 
-
 export let links: LinksFunction = () => {
   return [
     {
@@ -52,12 +58,17 @@ export const action: ActionFunction = async ({ request, params }) => {
   const { slug } = params;
   let data;
   invariant(slug, "missing slug param");
-  console.log('context', process.env.CONTEXT);
+  console.log("context", process.env.CONTEXT);
   if (process.env.CONTEXT === "production") {
     console.log("marking as read");
     data = await incrementPostViews(slug);
   }
   return json({ success: true, data: data });
+};
+
+export const meta: MetaFunction = ({ data, parentsData }) => {
+  const { requestInfo } = parentsData.root;
+  return getSocialMetas({ url: getDisplayUrl(requestInfo), title: data.title, image: data.img });
 };
 
 const useOnRead = (onRead: Function) => {

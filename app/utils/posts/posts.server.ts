@@ -20,6 +20,7 @@ export async function getPost(slug: string) {
     code: post.body,
     date: post.createdAt,
     views: post.views,
+    img: post.img,
   };
 }
 

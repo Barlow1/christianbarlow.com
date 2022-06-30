@@ -1,4 +1,5 @@
 import {
+  json,
   Link,
   Links,
   LiveReload,
@@ -22,6 +23,7 @@ import { Navigation } from "./components/Navigation";
 import faCss from "@fortawesome/fontawesome-svg-core/styles.css";
 import { Footer } from "./components/Footer";
 import { getThemeSession } from "./utils/sessions";
+import { getDomainUrl } from "./utils/url";
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -47,6 +49,10 @@ type LoaderData = {
   session: {
     theme: Theme | undefined;
   };
+  requestInfo: {
+    origin: string;
+    path: string;
+  };
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -56,8 +62,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     session: {
       theme,
     },
+    requestInfo: {
+      origin: getDomainUrl(request),
+      path: new URL(request.url).pathname,
+    },
   };
-  return data;
+  return json(data);
 };
 
 // https://remix.run/api/conventions#default-export
@@ -160,7 +170,7 @@ function DocumentWithTheme({
 }: {
   children: ReactNode;
   title?: string;
-  theme?: Theme
+  theme?: Theme;
 }): JSX.Element {
   return (
     <ThemeProvider suppliedTheme={theme}>
