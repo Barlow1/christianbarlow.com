@@ -107,7 +107,6 @@ export function NonFlashOfWrongThemeEls({ssrTheme}: {ssrTheme: boolean}) {
 
 
 const ThemeProvider = ({ children, suppliedTheme }: ThemeProviderType): JSX.Element => {
-  console.log('supplied theme', suppliedTheme);
   const [theme, setTheme] = useState<Theme | undefined>(() => {
     if (suppliedTheme) {
       if (themes.includes(suppliedTheme)) return suppliedTheme
@@ -128,7 +127,6 @@ const ThemeProvider = ({ children, suppliedTheme }: ThemeProviderType): JSX.Elem
     const mountRun = React.useRef(false);
 
     React.useEffect(() => {
-      console.log(theme);
       if (!mountRun.current) {
         mountRun.current = true;
         return;

@@ -78,7 +78,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function App() {
   const data = useLoaderData<LoaderData>();
   const theme = data.session.theme;
-  console.log("session theme", theme);
   return (
     <DocumentWithTheme theme={theme}>
       <Layout>
