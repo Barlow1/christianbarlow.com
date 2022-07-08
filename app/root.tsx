@@ -1,28 +1,31 @@
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
+
 import {
-  json,
   Link,
   Links,
   LiveReload,
-  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useCatch,
   useLoaderData,
-} from "remix";
-import type { LinksFunction } from "remix";
+} from "@remix-run/react";
 
 import globalStylesUrl from "~/styles/global.css";
 import proseStyleUrl from "~/styles/prose.css";
 import tailwindStyleUrls from "~/styles/tailwind.css";
-import ThemeProvider, { Theme } from "./components/ThemeProvider";
+import ThemeProvider, {
+  NonFlashOfWrongThemeEls,
+  Theme,
+} from "./components/ThemeProvider";
 import { ReactNode } from "react";
 import useTheme from "./hooks/useTheme";
 import { Navigation } from "./components/Navigation";
 import faCss from "@fortawesome/fontawesome-svg-core/styles.css";
 import { Footer } from "./components/Footer";
-import { getThemeSession } from "./utils/sessions";
+import { getThemeSession } from "./utils/sessions.server";
 import { getDomainUrl } from "./utils/url";
 
 // https://remix.run/api/app#links
@@ -75,6 +78,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function App() {
   const data = useLoaderData<LoaderData>();
   const theme = data.session.theme;
+  console.log("session theme", theme);
   return (
     <DocumentWithTheme theme={theme}>
       <Layout>
@@ -139,9 +143,11 @@ export function CatchBoundary() {
 function Document({
   children,
   title,
+  ssrTheme,
 }: {
   children: React.ReactNode;
   title?: string;
+  ssrTheme?: string;
 }) {
   const [theme] = useTheme();
   return (
@@ -152,6 +158,7 @@ function Document({
         {title ? <title>{title}</title> : null}
         <Meta />
         <Links />
+        <NonFlashOfWrongThemeEls ssrTheme={Boolean(theme)} />
       </head>
       <body className="bg-primary">
         {children}
@@ -174,7 +181,9 @@ function DocumentWithTheme({
 }): JSX.Element {
   return (
     <ThemeProvider suppliedTheme={theme}>
-      <Document {...rest}>{children}</Document>
+      <Document ssrTheme={theme} {...rest}>
+        {children}
+      </Document>
     </ThemeProvider>
   );
 }

@@ -10,7 +10,7 @@ export const handler: Handler = async (event, context) => {
   const response = prisma.post.findMany();
   return response
     .then((resp) => {
-      console.log("success", resp);
+      console.log("success");
       return {
         statusCode: 200,
         body: JSON.stringify(resp),

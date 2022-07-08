@@ -25,7 +25,7 @@ export const handler: Handler = async (event, context) => {
   });
   return response
     .then((resp) => {
-      console.log("update success", resp);
+      console.log("update success");
       return {
         statusCode: 200,
         body: JSON.stringify(resp),

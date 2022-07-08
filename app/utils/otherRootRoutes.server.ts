@@ -1,4 +1,4 @@
-import { EntryContext } from "remix";
+import { EntryContext } from "@remix-run/node";
 import { generateRobotsTxt, generateSitemap } from "@balavishnuvj/remix-seo";
 
 type Handler = (

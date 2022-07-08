@@ -1,5 +1,5 @@
 import { SEOHandle } from "@balavishnuvj/remix-seo";
-import { ActionFunction } from "remix";
+import { ActionFunction } from "@remix-run/node";
 import { handleConvertKitFormSubmission } from "~/utils/newsletter/handler.server";
 
 export const handle: SEOHandle = {

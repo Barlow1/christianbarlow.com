@@ -5,7 +5,8 @@ import React, {
   createContext,
   SetStateAction,
 } from "react";
-import { useFetcher } from "remix";
+import { useFetcher } from "@remix-run/react";
+import useTheme from "~/hooks/useTheme";
 
 export enum Theme {
   DARK = "dark",
@@ -36,7 +37,77 @@ const prefersLightMQ = "(prefers-color-scheme: light)";
 const getPreferredTheme = () =>
   window.matchMedia(prefersLightMQ).matches ? Theme.LIGHT : Theme.DARK;
 
+  const clientThemeCode = `
+// hi there dear reader 👋
+// this is how I make certain we avoid a flash of the wrong theme. If you select
+// a theme, then I'll know what you want in the future and you'll not see this
+// script anymore.
+;(() => {
+  const theme = window.matchMedia(${JSON.stringify(prefersLightMQ)}).matches
+    ? 'light'
+    : 'dark';
+  
+  const cl = document.documentElement.classList;
+  
+  const themeAlreadyApplied = cl.contains('light') || cl.contains('dark');
+  if (themeAlreadyApplied) {
+    // this script shouldn't exist if the theme is already applied!
+    console.warn(
+      "Hi there, could you let Kent know you're seeing this message? Thanks!",
+    );
+  } else {
+    cl.add(theme);
+  }
+  
+  // the <dark-mode> and <light-mode> approach won't work for meta tags,
+  // so we have to do it manually.
+  const meta = document.querySelector('meta[name=color-scheme]');
+  if (meta) {
+    if (theme === 'dark') {
+      meta.content = 'dark light';
+    } else if (theme === 'light') {
+      meta.content = 'light dark';
+    }
+  } else {
+    console.warn(
+      "Hey, could you let Christian know you're seeing this message? Thanks!",
+    );
+  }
+})();
+`
+
+export function NonFlashOfWrongThemeEls({ssrTheme}: {ssrTheme: boolean}) {
+  const [theme] = useTheme()
+  return (
+    <>
+      {/*
+        On the server, "theme" might be `null`, so clientThemeCode ensures that
+        this is correct before hydration.
+      */}
+      <meta
+        name="color-scheme"
+        content={theme === 'light' ? 'light dark' : 'dark light'}
+      />
+      {/*
+        If we know what the theme is from the server then we don't need
+        to do fancy tricks prior to hydration to make things match.
+      */}
+      {ssrTheme ? null : (
+        <script
+          // NOTE: we cannot use type="module" because that automatically makes
+          // the script "defer". That doesn't work for us because we need
+          // this script to run synchronously before the rest of the document
+          // is finished loading.
+          dangerouslySetInnerHTML={{__html: clientThemeCode}}
+        />
+      )}
+    </>
+  )
+}
+
+
 const ThemeProvider = ({ children, suppliedTheme }: ThemeProviderType): JSX.Element => {
+  console.log('supplied theme', suppliedTheme);
   const [theme, setTheme] = useState<Theme | undefined>(() => {
     if (suppliedTheme) {
       if (themes.includes(suppliedTheme)) return suppliedTheme
@@ -57,6 +128,7 @@ const ThemeProvider = ({ children, suppliedTheme }: ThemeProviderType): JSX.Elem
     const mountRun = React.useRef(false);
 
     React.useEffect(() => {
+      console.log(theme);
       if (!mountRun.current) {
         mountRun.current = true;
         return;

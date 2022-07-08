@@ -19,7 +19,7 @@ const { slug } = event.queryStringParameters as GetPostParameters;
   });
   return response
     .then((resp) => {
-      console.log("success", resp);
+      console.log("success");
       return {
         statusCode: 200,
         body: JSON.stringify(resp),

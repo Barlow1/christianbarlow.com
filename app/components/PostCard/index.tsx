@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import { H4 } from "../Typography";
 import { routes } from "~/routes";
 import { Post } from "@prisma/client";

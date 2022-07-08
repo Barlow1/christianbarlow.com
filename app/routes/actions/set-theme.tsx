@@ -1,8 +1,7 @@
 import * as React from "react";
-import { json, redirect } from "remix";
-import type { ActionFunction } from "remix";
+import { json, ActionFunction } from "@remix-run/node";
 import { isTheme } from "~/components/ThemeProvider";
-import { getThemeSession } from "~/utils/sessions";
+import { getThemeSession } from "~/utils/sessions.server";
 import { SEOHandle } from "@balavishnuvj/remix-seo";
 
 export const handle: SEOHandle = {

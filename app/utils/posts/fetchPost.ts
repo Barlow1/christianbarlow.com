@@ -7,5 +7,6 @@ export default async function fetchPost(slug: string) {
     return data;
   } catch (err) {
     console.log(err);
+    throw err;
   }
 }

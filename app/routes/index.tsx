@@ -1,6 +1,11 @@
 import { Post } from "@prisma/client";
-import type { MetaFunction, LoaderFunction, LinksFunction } from "remix";
-import { useLoaderData, json } from "remix";
+import type {
+  MetaFunction,
+  LoaderFunction,
+  LinksFunction,
+} from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { json } from "@remix-run/node";
 import Divider from "~/components/Divider";
 import PostCard from "~/components/PostCard";
 import { ProjectCard } from "~/components/ProjectCard";
@@ -62,10 +67,10 @@ export default function Index() {
           <div className="flex flex-col justify-center gap-4 text-center">
             <H1>React, Typescript, Remix and UX, Oh my!</H1>
             <Paragraph>
-              Using code and writing to fulfill my passions for
-              mentoring, student success, realty, and 3D virtual reality
-              experiences. I like to break away from the computer to travel,
-              cook, and explore with my wife Emma and cat Max.
+              Using code and writing to fulfill my passions for mentoring,
+              student success, realty, and 3D virtual reality experiences. I
+              like to break away from the computer to travel, cook, and explore
+              with my wife Emma and cat Max.
             </Paragraph>
           </div>
         </div>

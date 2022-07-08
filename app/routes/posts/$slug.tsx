@@ -1,12 +1,12 @@
 import {
   LoaderFunction,
-  useLoaderData,
   LinksFunction,
-  useFetcher,
   ActionFunction,
   json,
   MetaFunction,
-} from "remix";
+} from "@remix-run/node";
+
+import { useLoaderData, useFetcher, useCatch } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import Grid from "~/components/Grid";
 import {
@@ -51,7 +51,16 @@ export let links: LinksFunction = () => {
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.slug, 'expected param "slug"');
-  return getPost(params.slug);
+
+  const post = await getPost(params.slug);
+
+  if (!post) {
+    throw new Response("Not Found", {
+      status: 404,
+    });
+  }
+
+  return post;
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
@@ -68,7 +77,14 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export const meta: MetaFunction = ({ data, parentsData }) => {
   const { requestInfo } = parentsData.root;
-  return getSocialMetas({ url: getDisplayUrl(requestInfo), title: data.title, image: data.img });
+  if (data) {
+    return getSocialMetas({
+      url: getDisplayUrl(requestInfo),
+      title: data.title,
+      image: data.img,
+    });
+  }
+  return {};
 };
 
 const useOnRead = (onRead: Function) => {
@@ -140,5 +156,38 @@ export default function PostSlug() {
         <MDXContentComponent />
       </Grid>
     </>
+  );
+}
+
+export function CatchBoundary() {
+  let caught = useCatch();
+
+  let message;
+  switch (caught.status) {
+    case 401:
+      message = (
+        <p>
+          Oops! Looks like you tried to visit a page that you do not have access
+          to.
+        </p>
+      );
+      break;
+    case 404:
+      message = (
+        <p>Oops! Looks like you tried to visit a page that does not exist.</p>
+      );
+      break;
+
+    default:
+      throw new Error(caught.data || caught.statusText);
+  }
+
+  return (
+    <div>
+      <h1>
+        {caught.status}: {caught.statusText}
+      </h1>
+      {message}
+    </div>
   );
 }

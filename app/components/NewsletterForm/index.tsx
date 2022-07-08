@@ -1,4 +1,4 @@
-import { useFetcher } from "remix";
+import { useFetcher } from "@remix-run/react";
 import { ActionData } from "~/utils/newsletter/types";
 import Field from "../FormElements/Field";
 import { H4, Paragraph } from "../Typography";

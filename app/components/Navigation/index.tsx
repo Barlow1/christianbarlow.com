@@ -7,7 +7,7 @@ import {
   MenuPopover,
 } from "@reach/menu-button";
 import React from "react";
-import { Link } from "remix";
+import { Link } from "@remix-run/react";
 import { routes } from "~/routes";
 import { Sling as Hamburger } from "hamburger-react";
 import { Transition, animated } from "@react-spring/web";

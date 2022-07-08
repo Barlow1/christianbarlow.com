@@ -21,7 +21,7 @@ const socials = {
     label: "Github",
   },
   email: {
-    link: 'contact',
+    link: '/contact',
     label: "Email me!",
   },
 };
@@ -63,7 +63,7 @@ export function SocialBar() {
     };
   }, []);
   return (
-    <div className="dock-container z-50">
+    <div className="dock-container z-50 not-prose">
       <div className="dock">
         <ul>
           <li>

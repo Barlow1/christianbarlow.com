@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import { Project } from "~/utils/projects";
-import Grid from "../Grid";
 import { H4, Paragraph } from "../Typography";
 
 const Tag = ({ name }: { name: string }) => {
@@ -8,7 +7,6 @@ const Tag = ({ name }: { name: string }) => {
     <div
       style={{ width: "fit-content" }}
       className="bg-alt rounded-md p-1 m-1 mr-2"
-      key={name}
     >
       <span>{name}</span>
     </div>
@@ -27,7 +25,7 @@ export function ProjectCard({ project }: { project: Project }) {
       {project.libraries && (
         <TagList>
           {project.libraries.map((library) => {
-            return <Tag name={library}></Tag>;
+            return <Tag name={library} key={library + project.name}></Tag>;
           })}
         </TagList>
       )}

@@ -196,7 +196,7 @@ textarea {
 
 .remix-app__footer {
   padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-bottom: 5rem;
   border-top: 1px solid var(--color-border);
 }
 
@@ -214,6 +214,7 @@ textarea {
   left: 0;
   right: 0;
   pointer-events: none;
+  margin-bottom: 0 !important;
 }
 .dock {
   position: relative;
