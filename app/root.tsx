@@ -11,6 +11,7 @@ import {
   ScrollRestoration,
   useCatch,
   useLoaderData,
+  useLocation,
 } from "@remix-run/react";
 
 import globalStylesUrl from "~/styles/global.css";
@@ -20,13 +21,14 @@ import ThemeProvider, {
   NonFlashOfWrongThemeEls,
   Theme,
 } from "./components/ThemeProvider";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import useTheme from "./hooks/useTheme";
 import { Navigation } from "./components/Navigation";
 import faCss from "@fortawesome/fontawesome-svg-core/styles.css";
 import { Footer } from "./components/Footer";
 import { getThemeSession } from "./utils/sessions.server";
 import { getDomainUrl } from "./utils/url";
+import * as gtag from "~/utils/gtags.client";
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -149,6 +151,13 @@ function Document({
   ssrTheme?: string;
 }) {
   const [theme] = useTheme();
+  const location = useLocation()
+  const gaTrackingId = "G-1F79TNKTYL";
+  useEffect(() => {
+    if (gaTrackingId?.length) {
+      gtag.pageview(location.pathname, gaTrackingId);
+    }
+  }, [location]);
   return (
     <html lang="en" className={theme}>
       <head>
@@ -157,15 +166,22 @@ function Document({
         {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
         <script
           async
-          src="https://www.googletagmanager.com/gtag/js?id=G-1F79TNKTYL"
+          src={`https://www.googletagmanager.com/gtag/js?id=${gaTrackingId}`}
         ></script>
-        <script>
-          {`window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'G-1F79TNKTYL');`}
-        </script>
+        <script
+          async
+          id="gtag-init"
+          dangerouslySetInnerHTML={{
+            __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaTrackingId}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+          }}
+        />
         {title ? <title>{title}</title> : null}
         <Meta />
         <Links />
