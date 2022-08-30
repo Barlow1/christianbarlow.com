@@ -77,7 +77,7 @@ export default function Index() {
         <div className="py-10">
           <H2 className="py-5 text-center">Recommended Posts</H2>
           <div className="md:grid md:grid-cols-2 md:gap-4">
-            {data.posts.map((demo) => (
+            {data.posts?.map((demo) => (
               <PostCard post={demo} key={demo.slug} />
             ))}
           </div>

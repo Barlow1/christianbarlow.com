@@ -6,6 +6,7 @@ import fs from "fs/promises";
 import { bundleMDX } from "mdx-bundler";
 import path from "path";
 const { remarkCodeBlocksShiki } = require("@kentcdodds/md-temp");
+import remarkMdxImages from "remark-mdx-images";
 
 interface Content {
   code: string;
@@ -49,12 +50,22 @@ export const handler: Handler = async (event, context) => {
   const { code, frontmatter } = await bundleMDX({
     source: mdxSource,
     files: foundFiles,
+    cwd: path.resolve(contentDirectory),
     mdxOptions(options) {
       options.remarkPlugins = [
         ...(options.remarkPlugins ?? []),
         remarkCodeBlocksShiki,
+        remarkMdxImages,
       ];
-
+      return options;
+    },
+    esbuildOptions(options) {
+      options.loader = {
+        ...options.loader,
+        ".png": "dataurl",
+        ".jpg": "dataurl",
+        ".jpeg": "dataurl",
+      };
       return options;
     },
   });

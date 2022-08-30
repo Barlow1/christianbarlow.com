@@ -23,4 +23,7 @@ export const handler: Handler = async (event, context) => {
         body: JSON.stringify(error),
       };
     })
+    .finally(() => {
+      prisma.$disconnect();
+    });
 };

@@ -15,7 +15,7 @@ export default function Posts() {
         <div>
           <H1 className="py-5">Posts</H1>
           <div className="md:grid md:grid-cols-2 md:gap-4 pb-5">
-            {posts.map((post: Post) => (
+            {posts?.map((post: Post) => (
               <PostCard key={post.slug} post={post} />
             ))}
             </div>
