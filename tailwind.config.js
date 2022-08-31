@@ -251,9 +251,6 @@ module.exports = {
             css: [
               {
                 color: theme("colors.gray.500"),
-                a: {
-                  color: theme("colors.team.current"),
-                },
                 strong: {
                   color: theme("colors.black"),
                 },
@@ -281,7 +278,7 @@ module.exports = {
               {
                 color: theme("colors.blueGray.500"),
                 a: {
-                  color: theme("colors.team.current"),
+                  color: "#4876d6",
                 },
                 strong: {
                   color: theme("colors.white"),

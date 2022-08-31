@@ -7,7 +7,7 @@ import { Post } from "@prisma/client";
 export function PostCard({ post }: { post: Post }) {
   return (
     <Link
-      className="hover:no-underline justify-self-center w-full max-w-2xl"
+      className="hover:no-underline justify-self-center w-full max-w-2xl m-2"
       to={`${routes.posts.path}/${post.slug}`}
       prefetch="intent"
     >
