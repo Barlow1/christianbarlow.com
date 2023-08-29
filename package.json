@@ -37,6 +37,7 @@
     "react-is": "^18.2.0",
     "remark-mdx-images": "^2.0.0",
     "remix": "^1.6.4",
+    "sanitize-filename": "^1.6.3",
     "tiny-invariant": "^1.2.0"
   },
   "devDependencies": {

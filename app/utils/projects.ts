@@ -9,6 +9,19 @@ export type Project = {
 export function getProjects(): Project[] {
   return [
     {
+      name: "Hoots Mentorship",
+      description: "Long term software engineering mentorship platform",
+      libraries: ["React", "nodeJS", "remix", "tailwindcss", "MongoDB"],
+      url: "https://inhoots.com",
+      repo: "https://github.com/Barlow1/Hoots",
+    },    {
+      name: "Resume Tailor",
+      description: "Easily tailor or generate the perfect resume & cover letter",
+      libraries: ["React", "nodeJS", "remix", "tailwindcss", "SQLite", "Fly", "Playwright"],
+      url: "https://resumetailor.ai",
+      repo: "https://github.com/Barlow1/resume-tailor",
+    },
+    {
       name: "Ping Pong Tracker",
       description: "Making workplaces more fun!",
       libraries: ["React", "nodeJS", "remix", "tailwindcss"],
